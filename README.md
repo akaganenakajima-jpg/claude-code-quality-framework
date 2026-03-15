@@ -25,7 +25,7 @@ Claude Code が自動的に全ファイルを作成します。
 |---|---|
 | グローバルルール | `~/.claude/CLAUDE.md` — 開発ルール・品質方針・5S・TDD等 |
 | 品質管理（8ファイル） | `~/.claude/quality/` — ISO9001準拠のPDCA・リスク管理・品質ゲート等 |
-| IPA知識ベース（11ファイル） | `~/.claude/knowledge/ipa/` — 全10資格の満点合格者レベル専門知識 |
+| 開発知識ベース（11ファイル） | `~/.claude/knowledge/ipa/` — 10分野の専門知識リファレンス |
 
 ## フレームワーク構成
 
@@ -46,18 +46,18 @@ claude-code-quality-framework/
 │       ├── review.md               ← 3層検証基準
 │       └── docs.md                 ← 文書管理ルール
 ├── knowledge/
-│   └── ipa/                        ← IPA情報処理技術者試験 知識ベース
+│   └── ipa/                        ← システム開発 知識ベース（10分野）
 │       ├── index.md                ← 分野横断マップ・実務活用索引
-│       ├── fe.md                   ← 基本情報技術者
-│       ├── ap.md                   ← 応用情報技術者
-│       ├── db.md                   ← データベーススペシャリスト
-│       ├── nw.md                   ← ネットワークスペシャリスト
-│       ├── es.md                   ← エンベデッドシステムスペシャリスト
-│       ├── pm.md                   ← プロジェクトマネージャ
-│       ├── sm.md                   ← ITサービスマネージャ
-│       ├── st.md                   ← ITストラテジスト
-│       ├── sa.md                   ← システムアーキテクト
-│       └── au.md                   ← システム監査技術者
+│       ├── fe.md                   ← 基礎理論・CS
+│       ├── ap.md                   ← 応用技術
+│       ├── db.md                   ← データベース
+│       ├── nw.md                   ← ネットワーク
+│       ├── es.md                   ← 組込み・IoT
+│       ├── pm.md                   ← プロジェクト管理
+│       ├── sm.md                   ← ITサービス運用
+│       ├── st.md                   ← IT戦略・経営
+│       ├── sa.md                   ← アーキテクチャ
+│       └── au.md                   ← 監査・内部統制
 ├── hooks/                          ← Hookテンプレート（参考用）
 │   ├── pre-edit-guard.py.template
 │   ├── pre-deploy-guard.py.template
@@ -82,9 +82,9 @@ claude-code-quality-framework/
 | Google Drive MCP | 任意 | Google Driveファイル読み取り |
 | Box MCP | 任意 | Boxファイル管理 |
 
-## IPA知識ベース
+## システム開発 知識ベース
 
-IPA情報処理技術者試験 全10区分（FE/AP/DB/NW/ES/PM/SM/ST/SA/AU）の満点合格者レベルの知識を `~/.claude/knowledge/ipa/` に導入します。
+10分野の専門知識リファレンスを `~/.claude/knowledge/ipa/` に導入します。
 
 Claude Codeが開発業務で以下のような専門的助言を提供できるようになります:
 
