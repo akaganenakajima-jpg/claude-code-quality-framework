@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+"""Post-Deploy Remind: デプロイ後にPost-Checkを促す Hook"""
+import sys, json, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
+DEPLOY_CMD = "deploy"
+
+data = json.load(sys.stdin)
+tool_input = data.get("tool_input", {})
+command = tool_input.get("command", "")
+
+if DEPLOY_CMD in command:
+    print("", file=sys.stderr)
+    print("=== Deploy Post-Check Reminder ===", file=sys.stderr)
+    print("1. API疎通確認（/api/health 等）", file=sys.stderr)
+    print("2. 主要機能の動作確認", file=sys.stderr)
+    print("3. エラーログの確認", file=sys.stderr)
+    print("4. ロールバック手順の再確認", file=sys.stderr)
+    print("==================================", file=sys.stderr)
+
+sys.exit(0)
