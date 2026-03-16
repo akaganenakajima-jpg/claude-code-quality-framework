@@ -452,134 +452,12 @@ rm -rf "$TEMP/ccqf"
 
 ---
 
-## 4. 推奨ツール設定（任意）
+## 4. 推奨ツール（参考情報）
 
-### ⛔ 重要な制約（このセクション全体に適用）
-**MCPサーバーの追加はユーザー自身が行います。このセクションでは以下を絶対に行わないこと:**
-- `~/.claude/settings.json` の読み取り・書き込み・編集
-- `npx` / `uvx` / `docker` / `claude mcp add` コマンドの実行
-- MCP関連のJSONの生成・出力
-- いかなるMCP設定ファイルの作成
+MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
+推奨ツールの一覧は `recommended-tools.md` を参照してください。
 
-**このセクションで行うのは3つだけ:**
-1. 前提プログラム（Node.js / Python）の確認とインストール
-2. MCP一覧の表示と選択
-3. 選択されたMCPの前提条件をWebSearchで調べてテキストで報告
-
----
-
-### 4-1. 前提条件チェック
-
-MCPサーバーは `npx` または `uvx` で起動するものが大半です。
-**以下のコマンドで前提プログラムの有無を確認してください:**
-
-```bash
-node --version && npx --version
-python3 --version 2>/dev/null || python --version 2>/dev/null
-uvx --version 2>/dev/null || echo "uvx未インストール"
-```
-
-チェック結果をユーザーに報告した後、**不足があれば以下の選択肢を提示してください**（AskUserQuestion ツールを使用）:
-
-**質問**: 「MCP実行に必要な前提プログラムが不足しています。自動インストールしますか？」
-
-| 選択肢 | 動作 |
-|--------|------|
-| **🚀 全て自動インストール** | 不足分を全てインストールしてからMCP案内に進む |
-| **📋 不足一覧だけ表示** | インストール手順を表示し、ユーザーに任せる |
-| **⏭️ スキップ** | MCP設定をスキップして検証（セクション5）に進む |
-
-「全て自動インストール」が選択された場合、OSを判定して以下を実行してください:
-
-**Linux / macOS:**
-```bash
-if ! command -v node &>/dev/null; then
-  curl -fsSL https://fnm.vercel.app/install | bash
-  source ~/.bashrc 2>/dev/null || source ~/.zshrc 2>/dev/null
-  fnm install --lts && fnm use lts-latest
-fi
-if ! command -v uvx &>/dev/null; then
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  source $HOME/.local/bin/env 2>/dev/null
-fi
-```
-
-**Windows (Git Bash):**
-```bash
-if ! command -v node &>/dev/null; then
-  winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
-  echo "⚠️ Node.jsインストール完了。ターミナルを再起動してPATHを反映してください。"
-fi
-if ! command -v uvx &>/dev/null; then
-  powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-  echo "⚠️ uvインストール完了。ターミナルを再起動してPATHを反映してください。"
-fi
-```
-
-インストール後に `node --version` / `uvx --version` で成功を確認してから次に進むこと。
-
-### 4-2. MCPサーバー選択
-
-以下の一覧をユーザーに表示してください:
-
-| # | MCP | 概要 | 品質管理での活用 |
-|---|-----|------|----------------|
-| 1 | **Notion** ⭐ | ドキュメント自動記録・検索 | レポート・インシデント記録の自動保存 |
-| 2 | **Context7** ⭐ | ライブラリドキュメント自動参照 | 「既存の解決策を使う」原則の実践支援 |
-| 3 | **Claude Preview** ⭐ | Webページのスクリーンショット確認 | UI検証の3層検証Layer2 |
-| 4 | **Windows MCP** | Windows操作の自動化 | 開発環境の自動構築・検証 |
-| 5 | **Desktop Commander** | ファイル操作・ターミナル・プロセス管理 | 運用自動化・バッチ処理 |
-| 6 | **PDF** | PDF読み取り・作成・結合・分割 | 設計書・仕様書の自動処理 |
-| 7 | **GitHub** | Issue・PR・コード検索・Actions連携 | GitHub Flow・CI/CD管理 |
-| 8 | **Figma** | デザインファイル参照 | 設計・開発管理 |
-
-（⭐ = 推奨）
-
-**AskUserQuestion ツール**で以下の選択肢を提示:
-
-**質問**: 「導入するMCPサーバーを選んでください（⭐は推奨）」
-
-| 選択肢 |
-|--------|
-| ⭐ 推奨3つを導入（Notion + Context7 + Claude Preview） |
-| 🔧 全8つを導入 |
-| 📝 個別に選ぶ |
-| ⏭️ スキップ（MCPは後で設定する） |
-
-**「個別に選ぶ」が選択された場合**、8つのMCPそれぞれについて順番にAskUserQuestionで「導入する / スキップ」を聞いてください。
-
-### 4-3. 選択されたMCPの前提条件リサーチ & 報告
-
-選択されたMCPごとに（Claude Previewを除く）、**WebSearch で最新の前提条件を調べてユーザーにテキストで報告**してください。
-
-⚠️ MCPの前提条件は頻繁に変更されるため、ハードコードせず都度調べること。
-
-#### リサーチ手順（MCP 1つにつき1回）:
-
-1. **WebSearch** で「`[MCP名] mcp server install prerequisites`」を検索
-2. 公式ドキュメントを **WebFetch** で取得し、以下を確認:
-   - 必要なランタイムとバージョン（Node.js 18+? Python 3.13+? Docker?）
-   - APIキーの要否（必要な場合は取得先URL）
-3. 4-1で確認済みの環境と照合し、**バージョン不足があれば追加インストールを実施**
-4. リサーチ結果を以下の形式で**テキスト報告のみ**する:
-
-```
-📋 選択されたMCPの前提条件（最新情報を確認済み）:
-
-✅ Notion — Node.js 18+ 必要 → インストール済み / APIキー: Notion Integration Token が必要（取得先: https://...）
-✅ Context7 — Node.js 18+ 必要 → インストール済み / APIキー: 不要
-✅ Windows MCP — Python 3.13+ 必要 → 未インストール⚠️ / APIキー: 不要
-...
-
-⚠️ 不足: Python 3.13+ が必要です。以下でインストールしてください:
-   https://www.python.org/downloads/
-
-上記の前提条件が整ったら、MCPの追加はユーザー自身で行ってください:
-  - デスクトップ版: 設定 → MCP Servers → 名前で検索して追加
-  - ターミナル版: claude mcp add コマンド（詳細は各MCPの公式ドキュメントを参照）
-```
-
-**以上でセクション4は完了です。** MCP本体の追加はユーザーに委ねてください。
+⚠️ MCPの追加はこのセットアップの範囲外です。ユーザー自身で必要に応じて追加してください。
 
 ---
 
@@ -595,8 +473,6 @@ fi
 4. `~/.claude/knowledge/ipa/` フォルダに11ファイルが存在する:
    - `index.md`, `fe.md`, `ap.md`, `db.md`, `nw.md`
    - `es.md`, `pm.md`, `sm.md`, `st.md`, `sa.md`, `au.md`
-5. セクション4の前提条件チェックが完了している（スキップした場合は省略）
-
 全て確認できたら、以下の形式でセットアップ結果をユーザーに表示してください:
 
 ```
@@ -607,8 +483,6 @@ fi
 | CLAUDE.md（グローバルルール） | ✅ |
 | 品質管理ファイル（8個） | ✅ |
 | 知識ベース（11ファイル） | ✅ |
-| MCP前提条件 | ✅ 確認済 / ⏭️ スキップ |
 
-💡 MCPサーバー本体の追加はユーザー自身で行ってください。
-   詳細は recommended-tools.md を参照してください。
+💡 MCPサーバーの追加は recommended-tools.md を参照してください。
 ```
