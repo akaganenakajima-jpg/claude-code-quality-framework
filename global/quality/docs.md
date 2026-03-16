@@ -9,8 +9,8 @@
 |---|---|---|
 | 品質方針・目標 | `quality/policy.md` | git版管理 |
 | CLAUDE.md群 | リポジトリ + ~/.claude/ | git版管理 |
-| デプロイ手順 | `memory/deploy-protocol.md` | git版管理 |
-| テスト手順 | `memory/test-debug-loop-protocol.md` | git版管理 |
+| デプロイ手順 | `memory/deploy-protocol.md` | git版管理（プロジェクト毎に作成） |
+| テスト手順 | `memory/test-debug-loop-protocol.md` | git版管理（プロジェクト毎に作成） |
 
 ## 保持する記録
 | 記録 | 格納場所 | 保持期間 |

@@ -372,8 +372,8 @@ Layer 2の拡張手順として、UI/機能変更時に `test-debug-loop-protoco
 |---|---|---|
 | 品質方針・目標 | `quality/policy.md` | git版管理 |
 | CLAUDE.md群 | リポジトリ + ~/.claude/ | git版管理 |
-| デプロイ手順 | `memory/deploy-protocol.md` | git版管理 |
-| テスト手順 | `memory/test-debug-loop-protocol.md` | git版管理 |
+| デプロイ手順 | `memory/deploy-protocol.md` | git版管理（プロジェクト毎に作成） |
+| テスト手順 | `memory/test-debug-loop-protocol.md` | git版管理（プロジェクト毎に作成） |
 
 ## 保持する記録
 | 記録 | 格納場所 | 保持期間 |
@@ -470,9 +470,9 @@ uvx --version 2>/dev/null || echo "uvx: 未インストール"
 ```
 
 2. **WebSearch** で以下の最新バージョンを取得（変数として保持）:
-   - 「Node.js LTS latest version」 → `$NODE_LATEST`（例: "22.15.0"）
-   - 「Python latest stable version」 → `$PYTHON_LATEST`（例: "3.13.3"）
-   - 「uv (astral) latest version」 → `$UV_LATEST`（例: "0.7.12"）
+   - 「Node.js LTS latest version」 → `$NODE_LATEST`
+   - 「Python latest stable version」 → `$PYTHON_LATEST`
+   - 「uv (astral) latest version」 → `$UV_LATEST`
 
 3. 環境チェック結果と最新バージョンを比較してユーザーに報告:
    - インストール済み → 最新かどうかをバージョン比較して ✅ or ⚠️（古い）

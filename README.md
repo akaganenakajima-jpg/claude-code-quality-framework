@@ -80,9 +80,9 @@ claude-code-quality-framework/
 | Context7 MCP | ⭐ おすすめ | ライブラリドキュメントを自動参照 |
 | Claude Preview | ⭐ おすすめ | Webページの見た目を確認（標準搭載） |
 | Windows MCP | 任意 | Windows操作の自動化 |
-| Desktop Commander | 任意 | ファイル操作・コマンド実行・プロセス管理 |
-| PDF | 任意 | PDF読み取り・作成・結合・分割 |
-| GitHub | 任意 | Issue・PR・コード検索・Actions連携 |
+| Desktop Commander MCP | 任意 | ファイル操作・コマンド実行・プロセス管理 |
+| PDF MCP | 任意 | PDF読み取り・作成・結合・分割 |
+| GitHub MCP | 任意 | Issue・PR・コード検索・Actions連携 |
 | Figma MCP | 任意 | Figmaデザイン参照 |
 
 ## システム開発 知識ベース
