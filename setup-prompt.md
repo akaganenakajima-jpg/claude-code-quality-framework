@@ -473,10 +473,15 @@ uvx --version 2>/dev/null || echo "uvx: 未インストール"
    - 「Node.js LTS latest version」 → `$NODE_LATEST`
    - 「Python latest stable version」 → `$PYTHON_LATEST`
    - 「uv (astral) latest version」 → `$UV_LATEST`
+   - 「Windows MCP (darbotlabs) Python minimum version requirement」 → `$PYTHON_MIN_FOR_MCP`
+
+   ※ Pythonは最新安定版と MCP動作要件（Windows MCP等）の両方を満たすバージョンを選定すること。
+   　 `$PYTHON_LATEST` が `$PYTHON_MIN_FOR_MCP` 未満の場合は要件を満たすバージョンを優先する。
 
 3. 環境チェック結果と最新バージョンを比較してユーザーに報告:
    - インストール済み → 最新かどうかをバージョン比較して ✅ or ⚠️（古い）
    - 未インストール → ⚠️ と最新バージョンを明示
+   - Pythonは MCP動作要件も併記（例: 「最新安定版: X.Y.Z / Windows MCP要件: ≥X.Y」）
 
 4. **不足・古いものがあれば AskUserQuestion** で選択肢を提示:
 
