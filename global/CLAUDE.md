@@ -134,6 +134,27 @@
 - 知識ファイルの具体的なセクション番号（§）を引用して根拠を示す
 - 専門用語で聞かれた場合もマッチする（例: 「GLM」→ `stats/regression.md`）
 
+### 自発参照ルール（ユーザー指示がなくても参照する）
+以下の場面では、ユーザーからの明示的な指示がなくても、該当する知識ファイルを**自発的に参照**してから作業する。
+
+| 自分がやろうとしていること | 参照ファイル |
+|---|---|
+| SQLを書く・テーブルを設計する・マイグレーションを作る | `ipa/db.md` |
+| API設計・認証実装・入力バリデーション | `ipa/ap.md` |
+| ネットワーク設定・DNS・証明書・ポート設定 | `ipa/nw.md` |
+| 統計的な判断をする（閾値設定・異常検知・評価） | `stats/inference.md` |
+| 予測モデルや回帰を実装する | `stats/regression.md` |
+| 確率計算・期待値・分布の選択 | `stats/prob.md` |
+| 時系列データを扱う・トレンド分析 | `stats/ts.md` |
+| データの前処理・クレンジング・結合 | `ds-advanced/data-engineering.md` |
+| 可視化・グラフ・ダッシュボード | `ds-advanced/analytics.md` |
+| 機械学習モデルの構築・評価 | `stats/ml.md` + `ds-advanced/modeling.md` |
+| Pythonコードを書く | `python3/best-practices.md`（品質確認） |
+| コードレビューする | `ipa/index.md` → 該当分野 + `python3/best-practices.md` |
+| セキュリティに関わる変更をする | `ipa/ap.md` + `ipa/au.md` |
+| パフォーマンス改善する | `ipa/fe.md` |
+| 本番デプロイに関わる判断をする | `ipa/sm.md` + `ipa/sa.md` |
+
 ## Development Philosophy
 ### Before Implementation
 - 新しい機能を実装する前に、以下を必ず確認する：
