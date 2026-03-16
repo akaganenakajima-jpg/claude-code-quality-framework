@@ -54,6 +54,12 @@ MCPサーバーは `npx` または `uvx` で起動するものが大半です。
 - **前提**: npx
 - **追加方法**: Claude Code GUI の設定 → MCP Servers → PDF を追加
 
+### GitHub MCP
+- **できること**: Issue・PR操作、コード検索、Actions連携、リポジトリ管理
+- **品質管理との関連**: GitHub Flow・変更管理・CI/CD（ISO9001 §8.1）
+- **前提**: npx + GitHub Personal Access Token
+- **追加方法**: Claude Code GUI の設定 → MCP Servers → GitHub を追加
+
 ### Figma MCP
 - **できること**: Figmaのデザインファイルを参照・コンポーネント情報取得
 - **品質管理との関連**: 設計・開発管理（ISO9001 §8.3）
