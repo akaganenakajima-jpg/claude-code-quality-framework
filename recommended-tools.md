@@ -36,23 +36,29 @@ MCPサーバーは `npx` または `uvx` で起動するものが大半です。
 
 ## 任意
 
+### Windows MCP
+- **できること**: Windows操作の自動化（ウィンドウ管理・プロセス制御・レジストリ操作）
+- **品質管理との関連**: 開発環境の自動構築・検証（ISO9001 §7.1）
+- **前提**: npx
+- **追加方法**: Claude Code GUI の設定 → MCP Servers → Windows MCP を追加
+
+### Desktop Commander MCP
+- **できること**: ファイル操作・ターミナル実行・プロセス管理
+- **品質管理との関連**: 運用自動化・バッチ処理（ISO9001 §8.5）
+- **前提**: npx
+- **追加方法**: Claude Code GUI の設定 → MCP Servers → Desktop Commander を追加
+
+### PDF MCP
+- **できること**: PDF読み取り・作成・結合・分割・フォーム入力
+- **品質管理との関連**: 設計書・仕様書の自動処理（ISO9001 §7.5）
+- **前提**: npx
+- **追加方法**: Claude Code GUI の設定 → MCP Servers → PDF を追加
+
 ### Figma MCP
 - **できること**: Figmaのデザインファイルを参照・コンポーネント情報取得
 - **品質管理との関連**: 設計・開発管理（ISO9001 §8.3）
 - **前提**: npx + Figma APIキー
 - **追加方法**: Claude Code GUI の設定 → MCP Servers → Figma を追加
-
-### Google Drive MCP
-- **できること**: Google Driveのファイルを検索・読み取り
-- **品質管理との関連**: 文書共有（ISO9001 §7.4）
-- **前提**: npx + Google OAuth認証
-- **追加方法**: Claude Code GUI の設定 → MCP Servers → Google Drive を追加
-
-### Box MCP
-- **できること**: Boxのファイルを検索・読み取り・アップロード
-- **品質管理との関連**: 文書共有（ISO9001 §7.4）
-- **前提**: npx + Box認証
-- **追加方法**: Claude Code GUI の設定 → MCP Servers → Box を追加
 
 ## トラブルシューティング
 
