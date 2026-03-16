@@ -61,24 +61,74 @@
 - タスク管理（TodoWrite）を開始
 - 必要ならタスクファイル（`tasks/`）を作成
 
-## 知識ベース自動参照（`~/.claude/knowledge/ipa/`）
+## 知識ベース自動参照（`~/.claude/knowledge/`）
 以下の業務・キーワードを検知したら、該当する知識ファイルを **Read して参照してから** 作業する。
 
+### システム開発（`~/.claude/knowledge/ipa/`）
 | トリガー（業務・キーワード） | 参照ファイル |
 |---|---|
-| DB設計・テーブル変更・インデックス・SQL最適化・正規化 | `db.md` |
-| アーキテクチャ設計・マイクロサービス・可用性・キャッシュ・移行 | `sa.md` |
-| NW設計・VPN・DNS・TLS・帯域・CDN・障害切り分け | `nw.md` |
-| 運用設計・SLA・インシデント管理・BCP/DR・ITIL | `sm.md` |
-| 監査・内部統制・ログ証跡・コンプライアンス・J-SOX | `au.md` |
-| プロジェクト管理・見積り・EVM・スケジュール・リスク分析 | `pm.md` |
-| IT投資判断・ROI/NPV・DX戦略・ビジネス分析・BSC | `st.md` |
-| アルゴリズム最適化・計算量・データ構造・ソート | `fe.md` |
-| 待ち行列・パイプライン・セキュリティ設計・暗号 | `ap.md` |
-| 組込み・IoT・RTOS・安全設計・センサー | `es.md` |
-| コードレビュー・設計レビュー（横断的） | `index.md` → 該当分野を特定して参照 |
+| DB設計・テーブル変更・インデックス・SQL最適化・正規化 | `ipa/db.md` |
+| アーキテクチャ設計・マイクロサービス・可用性・キャッシュ・移行 | `ipa/sa.md` |
+| NW設計・VPN・DNS・TLS・帯域・CDN・障害切り分け | `ipa/nw.md` |
+| 運用設計・SLA・インシデント管理・BCP/DR・ITIL | `ipa/sm.md` |
+| 監査・内部統制・ログ証跡・コンプライアンス・J-SOX | `ipa/au.md` |
+| プロジェクト管理・見積り・EVM・スケジュール・リスク分析 | `ipa/pm.md` |
+| IT投資判断・ROI/NPV・DX戦略・ビジネス分析・BSC | `ipa/st.md` |
+| アルゴリズム最適化・計算量・データ構造・ソート | `ipa/fe.md` |
+| 待ち行列・パイプライン・セキュリティ設計・暗号 | `ipa/ap.md` |
+| 組込み・IoT・RTOS・安全設計・センサー | `ipa/es.md` |
+| コードレビュー・設計レビュー（横断的） | `ipa/index.md` → 該当分野を特定 |
 
-- 複数分野にまたがる場合は `index.md` の横断マップで参照先を決定
+### 統計検定1級（`~/.claude/knowledge/stats/`）
+| トリガー（業務・キーワード） | 参照ファイル |
+|---|---|
+| 確率分布・確率論・極限定理・不等式 | `stats/prob.md` |
+| 統計的推測・検定・信頼区間・MLE・UMVUE | `stats/inference.md` |
+| 多変量解析・PCA・因子分析・判別分析・SEM | `stats/multivariate.md` |
+| 時系列解析・ARIMA・スペクトル・カルマンフィルター | `stats/ts.md` |
+| ベイズ統計・MCMC・階層ベイズ・変分推論 | `stats/bayes.md` |
+| 回帰分析・GLM・ロジスティック・生存時間解析 | `stats/regression.md` |
+| 実験計画法・ANOVA・ノンパラメトリック・ブートストラップ | `stats/doe.md` |
+| 確率過程・マルコフ連鎖・待ち行列・因果推論 | `stats/stochastic.md` |
+| 機械学習理論・SVM・アンサンブル・EM・カーネル法 | `stats/ml.md` |
+
+### DS発展・DSエキスパート（`~/.claude/knowledge/ds-advanced/`, `ds-expert/`）
+| トリガー（業務・キーワード） | 参照ファイル |
+|---|---|
+| ETL・データクレンジング・前処理・特徴量エンジニアリング | `ds-advanced/data-engineering.md` |
+| EDA・可視化・ダッシュボード・A/Bテスト設計 | `ds-advanced/analytics.md` |
+| 予測モデル構築・CRISP-DM・MLOps・SHAP/LIME | `ds-advanced/modeling.md` |
+| データ倫理・個人情報保護・GDPR・公平性 | `ds-advanced/ethics.md` |
+| 高度モデリング・因果推論実践・強化学習・深層学習 | `ds-expert/advanced-modeling.md` |
+| 空間統計・ネットワーク分析・NLP高度・推薦システム | `ds-expert/deep-analytics.md` |
+| MLシステム設計・Feature Store・モデルサービング | `ds-expert/system-design.md` |
+| ビジネスKPI・ROI計算・実験設計 | `ds-expert/business.md` |
+
+### DS数学ストラテジスト上級（`~/.claude/knowledge/math-strategist/`）
+| トリガー（業務・キーワード） | 参照ファイル |
+|---|---|
+| 線形代数・固有値・SVD・行列微分・テンソル | `math-strategist/linear-algebra.md` |
+| 微積分・最適化・勾配降下法・KKT条件・凸最適化 | `math-strategist/calculus-optimization.md` |
+| 確率不等式・情報理論・エントロピー・KLダイバージェンス | `math-strategist/probability-stats.md` |
+| グラフ理論・数値計算・フーリエ解析・モンテカルロ | `math-strategist/applied-math.md` |
+
+### E資格（`~/.claude/knowledge/e-cert/`）
+| トリガー（業務・キーワード） | 参照ファイル |
+|---|---|
+| NN基礎・誤差逆伝播・活性化関数・正則化・初期化 | `e-cert/dl-fundamentals.md` |
+| CNN・RNN・Transformer・生成モデル・GNN | `e-cert/dl-architectures.md` |
+| 最適化アルゴリズム・分散学習・転移学習・LoRA・量子化 | `e-cert/dl-training.md` |
+| 物体検出・セグメンテーション・NLP応用・音声・強化学習 | `e-cert/dl-applications.md` |
+
+### Python3エンジニア認定基礎（`~/.claude/knowledge/python3/`）
+| トリガー（業務・キーワード） | 参照ファイル |
+|---|---|
+| Python構文・データ型・リスト/辞書/集合・関数・ジェネレータ | `python3/core-syntax.md` |
+| 標準ライブラリ・itertools/functools・asyncio・pathlib | `python3/stdlib.md` |
+| クラス設計・継承・ダンダーメソッド・例外処理・メタクラス | `python3/oop.md` |
+| PEP8・Pythonic・pytest・パッケージ管理・パフォーマンス | `python3/best-practices.md` |
+
+- 複数分野にまたがる場合は各 `index.md` の横断マップで参照先を決定
 - 知識ファイルの具体的なセクション番号（§）を引用して根拠を示す
 
 ## Development Philosophy

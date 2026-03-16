@@ -26,7 +26,13 @@ Claude Code が自動的に全ファイルを作成します。
 |---|---|
 | グローバルルール | `~/.claude/CLAUDE.md` — 開発ルール・品質方針・5S・TDD等 |
 | 品質管理（8ファイル） | `~/.claude/quality/` — ISO9001準拠のPDCA・リスク管理・品質ゲート等 |
-| 開発知識ベース（11ファイル） | `~/.claude/knowledge/ipa/` — 10分野の専門知識リファレンス |
+| 知識ベース — IPA（11ファイル） | `~/.claude/knowledge/ipa/` — システム開発10分野の専門知識 |
+| 知識ベース — 統計検定1級（10ファイル） | `~/.claude/knowledge/stats/` — 確率論・推測・多変量・時系列・ベイズ等 |
+| 知識ベース — DS発展（5ファイル） | `~/.claude/knowledge/ds-advanced/` — データエンジニアリング・分析・倫理 |
+| 知識ベース — DSエキスパート（5ファイル） | `~/.claude/knowledge/ds-expert/` — 高度モデリング・MLシステム設計 |
+| 知識ベース — DS数学ストラテジスト上級（5ファイル） | `~/.claude/knowledge/math-strategist/` — 線形代数・最適化・情報理論 |
+| 知識ベース — E資格（5ファイル） | `~/.claude/knowledge/e-cert/` — 深層学習基礎・アーキテクチャ・応用 |
+| 知識ベース — Python3基礎（5ファイル） | `~/.claude/knowledge/python3/` — 構文・標準ライブラリ・OOP・ベストプラクティス |
 
 ## フレームワーク構成
 
@@ -47,18 +53,22 @@ claude-code-quality-framework/
 │       ├── review.md               ← 3層検証基準
 │       └── docs.md                 ← 文書管理ルール
 ├── knowledge/
-│   └── ipa/                        ← システム開発 知識ベース（10分野）
-│       ├── index.md                ← 分野横断マップ・実務活用索引
-│       ├── fe.md                   ← 基礎理論・CS
-│       ├── ap.md                   ← 応用技術
-│       ├── db.md                   ← データベース
-│       ├── nw.md                   ← ネットワーク
-│       ├── es.md                   ← 組込み・IoT
-│       ├── pm.md                   ← プロジェクト管理
-│       ├── sm.md                   ← ITサービス運用
-│       ├── st.md                   ← IT戦略・経営
-│       ├── sa.md                   ← アーキテクチャ
-│       └── au.md                   ← 監査・内部統制
+│   ├── ipa/                        ← システム開発（10分野・11ファイル）
+│   │   ├── index.md, fe.md, ap.md, db.md, nw.md
+│   │   ├── es.md, pm.md, sm.md, st.md, sa.md, au.md
+│   ├── stats/                      ← 統計検定1級（9分野・10ファイル）
+│   │   ├── index.md, prob.md, inference.md, multivariate.md, ts.md
+│   │   ├── bayes.md, regression.md, doe.md, stochastic.md, ml.md
+│   ├── ds-advanced/                ← DS発展（4分野・5ファイル）
+│   │   ├── index.md, data-engineering.md, analytics.md, modeling.md, ethics.md
+│   ├── ds-expert/                  ← DSエキスパート（4分野・5ファイル）
+│   │   ├── index.md, advanced-modeling.md, deep-analytics.md, system-design.md, business.md
+│   ├── math-strategist/            ← DS数学ストラテジスト上級（4分野・5ファイル）
+│   │   ├── index.md, linear-algebra.md, calculus-optimization.md, probability-stats.md, applied-math.md
+│   ├── e-cert/                     ← E資格（4分野・5ファイル）
+│   │   ├── index.md, dl-fundamentals.md, dl-architectures.md, dl-training.md, dl-applications.md
+│   └── python3/                    ← Python3基礎（4分野・5ファイル）
+│       ├── index.md, core-syntax.md, stdlib.md, oop.md, best-practices.md
 ├── hooks/                          ← Hookテンプレート（参考用）
 │   ├── pre-edit-guard.py.template
 │   ├── pre-deploy-guard.py.template
@@ -85,22 +95,21 @@ claude-code-quality-framework/
 | GitHub MCP | 任意 | Issue・PR・コード検索・Actions連携 |
 | Figma MCP | 任意 | Figmaデザイン参照 |
 
-## システム開発 知識ベース
+## 知識ベース（7分野・46ファイル）
 
-10分野の専門知識リファレンスを `~/.claude/knowledge/ipa/` に導入します。
+`~/.claude/knowledge/` に7分野の専門知識リファレンスを導入します。
 
-Claude Codeが開発業務で以下のような専門的助言を提供できるようになります:
+Claude Codeが業務で以下のような専門的助言を提供できるようになります:
 
-| 業務 | 活用例 |
+| 分野 | 活用例 |
 |---|---|
-| DB設計 | 正規化理論(1NF-5NF)に基づくスキーマレビュー、SQL最適化 |
-| NW設計 | OSPF/BGPルーティング設計、VPN選定、障害切り分け手順 |
-| セキュリティ | ゼロトラスト設計、TLS1.3、脅威モデリング(STRIDE) |
-| PM | EVM(SPI/CPI/EAC)による進捗評価、見積り技法(FP法) |
-| 運用 | SLA策定(MTBF/MTTR/稼働率計算)、ITIL4ベースの運用設計 |
-| 経営 | NPV/IRRによるIT投資判断、DX戦略立案 |
-| 設計 | マイクロサービス/CQRS/DDDのトレードオフ分析 |
-| 監査 | COSO/J-SOXベースの内部統制設計、コンプライアンス確認 |
+| **IPA（システム開発）** | DB正規化・SQL最適化、NW設計、セキュリティ、PM、運用、監査 |
+| **統計検定1級** | 仮説検定、ベイズ推定、時系列予測、多変量解析、機械学習理論 |
+| **DS発展** | データ前処理・ETL、EDA・可視化、予測モデル構築、データ倫理・GDPR |
+| **DSエキスパート** | 因果推論、空間統計、NLP、MLシステム設計、ビジネスKPI |
+| **DS数学ストラテジスト上級** | 線形代数、凸最適化、情報理論、数値計算、フーリエ解析 |
+| **E資格** | CNN/RNN/Transformer、分散学習、転移学習、物体検出、強化学習 |
+| **Python3基礎** | 構文・データ型、標準ライブラリ、OOP設計、pytest、パフォーマンス |
 
 ---
 
