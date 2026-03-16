@@ -452,7 +452,76 @@ rm -rf "$TEMP/ccqf"
 
 ---
 
-## 4. 推奨ツール（参考情報）
+## 4. 前提プログラムのインストール & 推奨ツール案内
+
+### 4-1. 前提プログラムの最新バージョンをリサーチ & インストール
+
+MCPサーバーやビルドツールに必要な前提プログラムを確認・インストールします。
+**バージョン要件は変わるため、WebSearchで最新の推奨バージョンを都度確認すること。**
+
+#### 手順:
+
+1. 現在の環境を確認:
+```bash
+node --version 2>/dev/null || echo "Node.js: 未インストール"
+npx --version 2>/dev/null || echo "npx: 未インストール"
+python3 --version 2>/dev/null || python --version 2>/dev/null || echo "Python: 未インストール"
+uvx --version 2>/dev/null || echo "uvx: 未インストール"
+```
+
+2. **WebSearch** で以下の最新推奨バージョンを確認:
+   - 「Node.js LTS latest version」
+   - 「Python latest stable version」
+   - 「uv (astral) latest version」
+
+3. チェック結果と最新バージョン情報をユーザーに報告:
+```
+📋 前提プログラムの状態:
+  Node.js: v22.x インストール済み（最新LTS: v22.x ✅）
+  Python:  未インストール（最新安定版: 3.13.x ⚠️）
+  uvx:     未インストール（最新: 0.7.x ⚠️）
+```
+
+4. **不足があれば AskUserQuestion** で選択肢を提示:
+
+**質問**: 「前提プログラムが不足しています。自動インストールしますか？」
+
+| 選択肢 | 動作 |
+|--------|------|
+| **🚀 全て自動インストール** | 不足分を全てインストール |
+| **📋 不足一覧だけ表示** | インストール手順を表示し、ユーザーに任せる |
+| **⏭️ スキップ** | 検証（セクション5）に進む |
+
+「全て自動インストール」が選択された場合、OSを判定して実行:
+
+**Linux / macOS:**
+```bash
+if ! command -v node &>/dev/null; then
+  curl -fsSL https://fnm.vercel.app/install | bash
+  source ~/.bashrc 2>/dev/null || source ~/.zshrc 2>/dev/null
+  fnm install --lts && fnm use lts-latest
+fi
+if ! command -v uvx &>/dev/null; then
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  source $HOME/.local/bin/env 2>/dev/null
+fi
+```
+
+**Windows (Git Bash):**
+```bash
+if ! command -v node &>/dev/null; then
+  winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
+  echo "⚠️ Node.jsインストール完了。ターミナルを再起動してPATHを反映してください。"
+fi
+if ! command -v uvx &>/dev/null; then
+  powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+  echo "⚠️ uvインストール完了。ターミナルを再起動してPATHを反映してください。"
+fi
+```
+
+インストール後に各コマンドの `--version` で成功を確認すること。
+
+### 4-2. 推奨ツール（参考情報）
 
 MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 推奨ツールの一覧は `recommended-tools.md` を参照してください。
@@ -483,6 +552,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 | CLAUDE.md（グローバルルール） | ✅ |
 | 品質管理ファイル（8個） | ✅ |
 | 知識ベース（11ファイル） | ✅ |
+| 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 
 💡 MCPサーバーの追加は recommended-tools.md を参照してください。
 ```
