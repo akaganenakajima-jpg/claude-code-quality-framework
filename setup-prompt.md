@@ -394,7 +394,29 @@ Layer 2の拡張手順として、UI/機能変更時に `test-debug-loop-protoco
 ## 3. システム開発 知識ベース
 
 システム開発に必要な10分野の専門知識リファレンスを導入します。
-このリポジトリの `knowledge/ipa/` フォルダにある11ファイルを `~/.claude/knowledge/ipa/` にコピーしてください。
+GitHubからリポジトリをクローンし、知識ファイルをコピーしてください。
+
+```bash
+# 1. リポジトリをクローン（一時ディレクトリ）
+git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git /tmp/ccqf
+
+# 2. 知識ベースをコピー
+mkdir -p ~/.claude/knowledge/ipa
+cp /tmp/ccqf/knowledge/ipa/*.md ~/.claude/knowledge/ipa/
+
+# 3. 一時ディレクトリを削除
+rm -rf /tmp/ccqf
+```
+
+Windows (Git Bash) の場合:
+```bash
+git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git "$TEMP/ccqf"
+mkdir -p ~/.claude/knowledge/ipa
+cp "$TEMP/ccqf/knowledge/ipa/"*.md ~/.claude/knowledge/ipa/
+rm -rf "$TEMP/ccqf"
+```
+
+コピー後、以下の構成になっていることを確認してください:
 
 ```
 ~/.claude/knowledge/ipa/
