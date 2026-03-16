@@ -471,14 +471,53 @@ python3 --version 2>/dev/null || python --version 2>/dev/null
 uvx --version 2>/dev/null || echo "uvx未インストール"
 ```
 
-結果に応じて、ユーザーに**前提条件の状態**を報告してください:
+チェック結果をユーザーに報告した後、**不足があれば以下の選択肢を提示してください**（AskUserQuestion ツールを使用）:
 
-| 前提 | 確認コマンド | 未インストール時の案内 |
-|------|------------|---------------------|
-| Node.js (≥18) | `node --version` | `https://nodejs.org/` からLTSをインストール |
-| npx | `npx --version` | Node.js に同梱。`npm install -g npm` で更新 |
-| Python (≥3.10) | `python3 --version` | `https://www.python.org/` からインストール |
-| uvx | `uvx --version` | `pip install uv` または `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+**質問**: 「MCP実行に必要な前提プログラムが不足しています。自動インストールしますか？」
+
+| 選択肢 | 動作 |
+|--------|------|
+| **🚀 全て自動インストール** | 不足分を全てインストールしてからMCP案内に進む |
+| **📋 不足一覧だけ表示** | インストール手順を表示し、ユーザーに任せる |
+| **⏭️ スキップ** | MCP設定をスキップして検証（セクション5）に進む |
+
+「全て自動インストール」が選択された場合、OSを判定して以下を実行してください:
+
+**Linux / macOS:**
+```bash
+# Node.js (未インストール時のみ)
+if ! command -v node &>/dev/null; then
+  curl -fsSL https://fnm.vercel.app/install | bash
+  source ~/.bashrc 2>/dev/null || source ~/.zshrc 2>/dev/null
+  fnm install --lts && fnm use lts-latest
+fi
+
+# uv + uvx (未インストール時のみ)
+if ! command -v uvx &>/dev/null; then
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  source $HOME/.local/bin/env 2>/dev/null
+fi
+```
+
+**Windows (Git Bash):**
+```bash
+# Node.js (未インストール時のみ — wingetが使える場合)
+if ! command -v node &>/dev/null; then
+  winget install OpenJS.NodeJS.LTS --accept-source-agreements --accept-package-agreements
+  echo "⚠️ Node.jsをインストールしました。ターミナルを再起動してPATHを反映してください。"
+fi
+
+# uv + uvx (未インストール時のみ)
+if ! command -v uvx &>/dev/null; then
+  powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+  echo "⚠️ uvをインストールしました。ターミナルを再起動してPATHを反映してください。"
+fi
+```
+
+**⚠️ 重要**: インストール後に `node --version` / `uvx --version` で成功を確認してから次に進むこと。
+PATHが反映されない場合は「ターミナルを再起動してください」とユーザーに案内すること。
+
+全て成功した場合、またはチェック時点で不足がない場合は、そのまま 4-2 に進む。
 
 ### 4-2. 推奨MCPサーバー
 
