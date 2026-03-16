@@ -61,75 +61,78 @@
 - タスク管理（TodoWrite）を開始
 - 必要ならタスクファイル（`tasks/`）を作成
 
-## 知識ベース自動参照（`~/.claude/knowledge/`）
-以下の業務・キーワードを検知したら、該当する知識ファイルを **Read して参照してから** 作業する。
+## 知識ベース自動参照
+以下の業務シーン・ユーザーの言い回しを検知したら、該当する知識ファイルを **Read して参照してから** 作業する。
+専門用語でも日常表現でも、意図が一致すれば発火する。
 
-### システム開発（`~/.claude/knowledge/ipa/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### IPA情報処理技術者（`~/.claude/knowledge/ipa/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| DB設計・テーブル変更・インデックス・SQL最適化・正規化 | `ipa/db.md` |
-| アーキテクチャ設計・マイクロサービス・可用性・キャッシュ・移行 | `ipa/sa.md` |
-| NW設計・VPN・DNS・TLS・帯域・CDN・障害切り分け | `ipa/nw.md` |
-| 運用設計・SLA・インシデント管理・BCP/DR・ITIL | `ipa/sm.md` |
-| 監査・内部統制・ログ証跡・コンプライアンス・J-SOX | `ipa/au.md` |
-| プロジェクト管理・見積り・EVM・スケジュール・リスク分析 | `ipa/pm.md` |
-| IT投資判断・ROI/NPV・DX戦略・ビジネス分析・BSC | `ipa/st.md` |
-| アルゴリズム最適化・計算量・データ構造・ソート | `ipa/fe.md` |
-| 待ち行列・パイプライン・セキュリティ設計・暗号 | `ipa/ap.md` |
-| 組込み・IoT・RTOS・安全設計・センサー | `ipa/es.md` |
-| コードレビュー・設計レビュー（横断的） | `ipa/index.md` → 該当分野を特定 |
+| テーブル作って・DB設計・クエリが遅い・SQLチューニング | `ipa/db.md` |
+| システム構成どうする・サービス分割・負荷分散・キャッシュ戦略 | `ipa/sa.md` |
+| ネットワーク構成・VPN繋がらない・SSL証明書・DNS設定 | `ipa/nw.md` |
+| 障害対応のルール作りたい・稼働率どれくらい必要・バックアップ計画 | `ipa/sm.md` |
+| 監査対応・ログどこまで残す・内部統制 | `ipa/au.md` |
+| このプロジェクトどれくらいかかる・進捗管理・リスク洗い出し | `ipa/pm.md` |
+| この投資やる価値ある？・DX推進・費用対効果 | `ipa/st.md` |
+| 処理が遅い・アルゴリズム改善・計算量減らしたい | `ipa/fe.md` |
+| リクエストが詰まる・セキュリティ設計・暗号化どうする | `ipa/ap.md` |
+| 組込みシステム・センサー制御・リアルタイム処理 | `ipa/es.md` |
+| コードレビューして・設計レビュー（横断的） | `ipa/index.md` → 該当分野を特定 |
 
-### 統計検定1級（`~/.claude/knowledge/stats/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### 統計・確率（`~/.claude/knowledge/stats/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| 確率分布・確率論・極限定理・不等式 | `stats/prob.md` |
-| 統計的推測・検定・信頼区間・MLE・UMVUE | `stats/inference.md` |
-| 多変量解析・PCA・因子分析・判別分析・SEM | `stats/multivariate.md` |
-| 時系列解析・ARIMA・スペクトル・カルマンフィルター | `stats/ts.md` |
-| ベイズ統計・MCMC・階層ベイズ・変分推論 | `stats/bayes.md` |
-| 回帰分析・GLM・ロジスティック・生存時間解析 | `stats/regression.md` |
-| 実験計画法・ANOVA・ノンパラメトリック・ブートストラップ | `stats/doe.md` |
-| 確率過程・マルコフ連鎖・待ち行列・因果推論 | `stats/stochastic.md` |
-| 機械学習理論・SVM・アンサンブル・EM・カーネル法 | `stats/ml.md` |
+| 確率ってどれくらい？・分布選びたい・偶然か知りたい | `stats/prob.md` |
+| 差があるか検定して・サンプルサイズ足りる？・有意差ある？ | `stats/inference.md` |
+| データの次元多すぎ・似たグループに分けたい・パターン見つけたい | `stats/multivariate.md` |
+| 売上の推移を予測・将来の需要・季節性がありそう | `stats/ts.md` |
+| データ少ないけど推定したい・事前知識を使いたい・不確実性を見たい | `stats/bayes.md` |
+| 何が原因か知りたい・予測モデル作って・売上に効く要因は | `stats/regression.md` |
+| A/Bテストの設計・施策の効果比較・実験の組み方 | `stats/doe.md` |
+| この施策の因果関係は？・待ち時間の理論値・状態が遷移する | `stats/stochastic.md` |
+| 分類モデル作りたい・精度上げたい・どのアルゴリズムがいい？ | `stats/ml.md` |
 
-### DS発展・DSエキスパート（`~/.claude/knowledge/ds-advanced/`, `ds-expert/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### データサイエンス実務（`~/.claude/knowledge/ds-advanced/`, `ds-expert/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| ETL・データクレンジング・前処理・特徴量エンジニアリング | `ds-advanced/data-engineering.md` |
-| EDA・可視化・ダッシュボード・A/Bテスト設計 | `ds-advanced/analytics.md` |
-| 予測モデル構築・CRISP-DM・MLOps・SHAP/LIME | `ds-advanced/modeling.md` |
-| データ倫理・個人情報保護・GDPR・公平性 | `ds-advanced/ethics.md` |
-| 高度モデリング・因果推論実践・強化学習・深層学習 | `ds-expert/advanced-modeling.md` |
-| 空間統計・ネットワーク分析・NLP高度・推薦システム | `ds-expert/deep-analytics.md` |
-| MLシステム設計・Feature Store・モデルサービング | `ds-expert/system-design.md` |
-| ビジネスKPI・ROI計算・実験設計 | `ds-expert/business.md` |
+| データが汚い・欠損値どうする・前処理のパイプライン | `ds-advanced/data-engineering.md` |
+| グラフで見せたい・ダッシュボード作りたい・A/Bテスト結果の見方 | `ds-advanced/analytics.md` |
+| 予測モデルの精度が出ない・特徴量何使う？・モデル比較したい | `ds-advanced/modeling.md` |
+| 個人情報大丈夫？・AIの公平性・データの扱い方のルール | `ds-advanced/ethics.md` |
+| この施策って本当に効果あった？・因果を証明したい・深層学習で解きたい | `ds-expert/advanced-modeling.md` |
+| おすすめ機能作りたい・テキスト分析・地図上で分析 | `ds-expert/deep-analytics.md` |
+| モデルを本番にのせたい・APIにしたい・モデルの劣化を監視 | `ds-expert/system-design.md` |
+| KPIどう設計する？・この施策のROIは？・データで意思決定 | `ds-expert/business.md` |
 
-### DS数学ストラテジスト上級（`~/.claude/knowledge/math-strategist/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### 数学基盤（`~/.claude/knowledge/math-strategist/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| 線形代数・固有値・SVD・行列微分・テンソル | `math-strategist/linear-algebra.md` |
-| 微積分・最適化・勾配降下法・KKT条件・凸最適化 | `math-strategist/calculus-optimization.md` |
-| 確率不等式・情報理論・エントロピー・KLダイバージェンス | `math-strategist/probability-stats.md` |
-| グラフ理論・数値計算・フーリエ解析・モンテカルロ | `math-strategist/applied-math.md` |
+| 行列計算・次元削減の数学的背景・ベクトルの関係 | `math-strategist/linear-algebra.md` |
+| 最適化したい・最小値を求めたい・制約付きの最適解 | `math-strategist/calculus-optimization.md` |
+| 情報量を測りたい・2つの分布の違い・不確実性の数学的扱い | `math-strategist/probability-stats.md` |
+| ネットワーク構造の数理・周波数分析・シミュレーション | `math-strategist/applied-math.md` |
 
-### E資格（`~/.claude/knowledge/e-cert/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### 深層学習（`~/.claude/knowledge/e-cert/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| NN基礎・誤差逆伝播・活性化関数・正則化・初期化 | `e-cert/dl-fundamentals.md` |
-| CNN・RNN・Transformer・生成モデル・GNN | `e-cert/dl-architectures.md` |
-| 最適化アルゴリズム・分散学習・転移学習・LoRA・量子化 | `e-cert/dl-training.md` |
-| 物体検出・セグメンテーション・NLP応用・音声・強化学習 | `e-cert/dl-applications.md` |
+| ニューラルネット作りたい・学習が収束しない・過学習してる | `e-cert/dl-fundamentals.md` |
+| 画像認識・テキスト生成・Transformerの仕組み・モデル構造 | `e-cert/dl-architectures.md` |
+| 学習が遅い・GPU複数使いたい・既存モデルを活用したい・モデル軽量化 | `e-cert/dl-training.md` |
+| 物体を検出したい・文書を分類したい・音声を認識したい | `e-cert/dl-applications.md` |
 
-### Python3エンジニア認定基礎（`~/.claude/knowledge/python3/`）
-| トリガー（業務・キーワード） | 参照ファイル |
+### Python開発（`~/.claude/knowledge/python3/`）
+| ユーザーがこう言ったら | 参照ファイル |
 |---|---|
-| Python構文・データ型・リスト/辞書/集合・関数・ジェネレータ | `python3/core-syntax.md` |
-| 標準ライブラリ・itertools/functools・asyncio・pathlib | `python3/stdlib.md` |
-| クラス設計・継承・ダンダーメソッド・例外処理・メタクラス | `python3/oop.md` |
-| PEP8・Pythonic・pytest・パッケージ管理・パフォーマンス | `python3/best-practices.md` |
+| Pythonの書き方・リストの操作・関数の引数・型ヒント | `python3/core-syntax.md` |
+| ファイル読み書き・日付処理・並列処理・ログ出力 | `python3/stdlib.md` |
+| クラスの設計・継承どうする・エラー処理の書き方 | `python3/oop.md` |
+| コード綺麗にしたい・テスト書きたい・実行速度を上げたい | `python3/best-practices.md` |
 
+### 参照ルール
 - 複数分野にまたがる場合は各 `index.md` の横断マップで参照先を決定
 - 知識ファイルの具体的なセクション番号（§）を引用して根拠を示す
+- 専門用語で聞かれた場合もマッチする（例: 「GLM」→ `stats/regression.md`）
 
 ## Development Philosophy
 ### Before Implementation
