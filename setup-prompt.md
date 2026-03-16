@@ -457,27 +457,69 @@ rm -rf "$TEMP/ccqf"
 以下のMCPサーバーの導入を推奨として**ユーザーに提示**してください。
 追加はユーザーの判断に委ねますが、**必ず一覧を表示して案内すること**。
 
+### 4-1. 前提条件チェック（MCP導入前に必ず実行）
+
+MCPサーバーは `npx` または `uvx` で起動するものが大半です。
+**ユーザーに案内する前に、以下のコマンドで前提プログラムの有無を確認してください:**
+
+```bash
+# Node.js / npx（ほとんどのMCPで必要）
+node --version && npx --version
+
+# Python / uvx（一部のMCPで必要）
+python3 --version 2>/dev/null || python --version 2>/dev/null
+uvx --version 2>/dev/null || echo "uvx未インストール"
+```
+
+結果に応じて、ユーザーに**前提条件の状態**を報告してください:
+
+| 前提 | 確認コマンド | 未インストール時の案内 |
+|------|------------|---------------------|
+| Node.js (≥18) | `node --version` | `https://nodejs.org/` からLTSをインストール |
+| npx | `npx --version` | Node.js に同梱。`npm install -g npm` で更新 |
+| Python (≥3.10) | `python3 --version` | `https://www.python.org/` からインストール |
+| uvx | `uvx --version` | `pip install uv` または `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+
+### 4-2. 推奨MCPサーバー
+
 ユーザーに以下を表示してください:
 
 ---
 
 ### 📦 推奨MCPサーバー（品質フレームワークとの相乗効果あり）
 
-| # | MCP | 概要 | 品質管理での活用 | 追加方法 |
-|---|-----|------|----------------|---------|
-| 1 | **Notion** | ドキュメント自動記録・検索 | レポート・インシデント記録の自動保存 | 設定 → MCP Servers → 「Notion」検索 |
-| 2 | **Context7** | ライブラリドキュメント自動参照 | 「既存の解決策を使う」原則の実践支援 | 設定 → MCP Servers → 「Context7」検索 |
-| 3 | **Claude Preview** | Webページのスクリーンショット確認 | UI検証の3層検証Layer2 | 標準搭載（追加不要） |
+| # | MCP | 概要 | 品質管理での活用 | 前提 |
+|---|-----|------|----------------|------|
+| 1 | **Notion** | ドキュメント自動記録・検索 | レポート・インシデント記録の自動保存 | npx |
+| 2 | **Context7** | ライブラリドキュメント自動参照 | 「既存の解決策を使う」原則の実践支援 | npx |
+| 3 | **Claude Preview** | Webページのスクリーンショット確認 | UI検証の3層検証Layer2 | 不要（標準搭載） |
 
 ### 📦 任意MCPサーバー（必要に応じて）
 
-| # | MCP | 概要 |
-|---|-----|------|
-| 4 | **Figma** | デザインファイル参照（Figma APIキー必要） |
-| 5 | **Google Drive** | Google Driveファイル読み取り |
-| 6 | **Box** | Boxファイル検索・読み取り・アップロード |
+| # | MCP | 概要 | 前提 |
+|---|-----|------|------|
+| 4 | **Figma** | デザインファイル参照 | npx + Figma APIキー |
+| 5 | **Google Drive** | Google Driveファイル読み取り | npx + Google OAuth |
+| 6 | **Box** | Boxファイル検索・読み取り・アップロード | npx + Box認証 |
+
+追加方法: Claude Code 設定 → MCP Servers → 名前で検索して追加
 
 ---
+
+### 4-3. MCP導入時のトラブルシューティング
+
+MCPサーバー追加後にエラーが出た場合、以下を順にチェックしてユーザーに案内してください:
+
+| エラーパターン | 原因 | 対処 |
+|--------------|------|------|
+| `npx: command not found` | Node.js未インストール | `https://nodejs.org/` からLTSインストール |
+| `uvx: command not found` | uv未インストール | `pip install uv` |
+| `EACCES: permission denied` | グローバルnpmの権限不足 | `npm config set prefix ~/.npm-global` + PATH追加 |
+| `Error: Cannot find module` | npxキャッシュ破損 | `npx --yes clear-npx-cache` → 再試行 |
+| `ETIMEOUT` / `ECONNREFUSED` | ネットワーク/プロキシ | `npm config set proxy` でプロキシ設定 |
+| `401 Unauthorized` | APIキー未設定/期限切れ | 該当サービスでキーを再発行 |
+| `spawn UNKNOWN` (Windows) | パスにスペース含む | `"C:\Program Files\..."` をダブルクォートで囲む |
+| MCP起動後すぐ切断 | ポート競合 or メモリ不足 | `lsof -i :PORT` で競合確認、不要プロセスをkill |
 
 上記を表示した後、次のセクション（検証）に進んでください。
 
