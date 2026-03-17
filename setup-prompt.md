@@ -11,12 +11,161 @@
 `~/.claude/CLAUDE.md` に以下を書き込んでください:
 
 <content>
-この内容は `global/CLAUDE.md` と同一です。
-セットアップ時は `global/CLAUDE.md` をそのまま `~/.claude/CLAUDE.md` にコピーしてください。
+# CLAUDE.md — グローバル設定（全プロジェクト共通）
 
-```bash
-cp global/CLAUDE.md ~/.claude/CLAUDE.md
-```
+> プロジェクト固有ルールは各リポジトリの `CLAUDE.md` を参照
+
+## Conversation Guidelines
+- 常に日本語で会話する
+
+## GitHub Operations
+- GitHubのリソース（リポジトリ、Issue、PR、コード等）を操作する際は、`gh` コマンド（GitHub CLI）を使用する
+- WebFetchやWebSearchではなく、`gh` コマンドを優先する
+
+## 品質管理 (ISO9001:2015準拠)
+品質方針: 「証拠に基づき、正しく・安全に・持続的に動くシステムを提供する」
+詳細・品質目標 → `~/.claude/quality/policy.md`
+
+### PDCAゲート（全タスクに適用。省略禁止）
+1. **Plan（計画）**: まず「何を作るか・何に影響するか・どうなったら完成か」を整理してから着手 → `quality/process.md`
+2. **Do（実行）**: 先にテストを書く → テストが通るコードを書く → 品質チェックを通す → `quality/gates.md`（詳細手順 → `practices/testing.md`）
+3. **Check（確認）**: 3段階で確認（ユニットテスト → 全体テスト → 本番で動作確認） → `quality/review.md`
+4. **Act（改善）**: 問題が出たら → なぜ起きたか → 直す → 他にも同じ問題がないか確認 → `quality/nonconformity.md`
+
+### リスク判定（変更前に必ず実施）→ `quality/risks.md`
+- 🟢 低リスク: 新しいファイルを追加する・テストを増やす・コメントだけ直す
+- 🟡 中リスク: 動いているコードを修正する・設定を変える（元に戻せる範囲）→ 先にコミットしてから着手
+- 🟠 高リスク: 複数の画面や機能に影響する変更・外部連携の変更 → 影響範囲を洗い出してから着手
+- 🔴 最高リスク: データベース構造の変更・定期実行の変更・本番公開 → 隔離環境（Worktree）で作業
+
+### 品質記録
+- バグや問題が発生 → `tasks/` にファイルを作り（原因・対応・横展開を記載）
+- セッション終了時 → 品質KPI更新 → `quality/metrics.md`
+- 文書管理ルール → `quality/docs.md`
+
+## 5S — 新タスク開始前の準備（省略禁止）
+新しいタスクに取り掛かる前に、必ず以下を実施する。
+
+### 1. 片付け — 前のタスクの残骸がないか
+- 裏で動きっぱなしのプロセスがないか確認（あれば止める）
+- 前のタスクで作った一時ファイルが残っていたら削除
+
+### 2. 現状確認 — 今どこにいるか
+- 今どのブランチにいるか、保存していない変更がないか確認（`git status`）
+- 作業フォルダが正しいか確認
+- 必要なファイル・データが揃っているか確認
+
+### 3. 健康チェック — PCが重くないか
+- CPU / メモリ / ディスクの使用率を確認
+- 異常（CPU高負荷が続く、メモリ80%超、ディスク90%超）があれば先に解決
+- **手動で毎回対処するのではなく、仕組み（自動制限/監視）で解決する**
+
+### 4. ルール確認 — 設定は最新か
+- プロジェクトの CLAUDE.md / memory が最新か確認
+- 前のタスクで学んだことがメモリに記録されているか確認
+
+### 5. 手順開始 — やることリストを作る
+- タスク管理（TodoWrite）を開始
+- 必要ならタスクファイル（`tasks/`）を作成
+
+## 知識ベース自動参照
+タスクを受けたら（またはこれから自分が作業するとき）、**課題の本質を分析**し、該当する知識ファイルを Read してから作業する。
+
+### Step 1: 大分類 — 「何をする課題か？」（複数該当OK）
+
+| 大分類 | 判断基準 | 参照ファイル |
+|---|---|---|
+| 🏗️ つくる | ソフトウェア・システム・APIなどを設計・実装する | `ipa/sa.md`（構成）, `ipa/ap.md`（実装）, `python3/`（言語） |
+| 🗄️ 貯める・出す | データを保存・検索・構造化する | `ipa/db.md` |
+| 🌐 つなぐ | 機器・サービス同士を通信させる | `ipa/nw.md` |
+| 📊 数字で理解する | データを分析・集計・可視化して意味を読み取る | `stats/prob.md`, `stats/inference.md`, `ds-advanced/analytics.md` |
+| 🔮 予測・発見する | 未来を予測する/パターンを見つける/原因を特定する | `stats/regression.md`, `stats/ts.md`, `stats/multivariate.md`, `stats/ml.md` |
+| 🤖 AIに任せる | 機械学習・深層学習で自動化する | `ds-advanced/modeling.md`, `e-cert/` → `index.md` |
+| 🧪 比べる・試す | A/Bテスト・実験・効果検証・因果推論 | `stats/doe.md`, `stats/bayes.md`, `stats/stochastic.md` |
+| 🚀 届ける・動かす | 本番デプロイ・CI/CD・MLOps・監視・障害対応 | `ipa/sm.md`, `ds-expert/system-design.md` |
+| 📋 まわす | プロジェクト管理・スケジュール・体制・見積もり | `ipa/pm.md` |
+| 💰 決める | 投資判断・費用対効果・経営報告・KPI設計 | `ipa/st.md`, `ds-expert/business.md` |
+| 🧹 整える | データ前処理・クレンジング・ドキュメント整備 | `ds-advanced/data-engineering.md` |
+| 🔌 組み込む | ハードウェア制御・IoT・センサー・リアルタイム処理 | `ipa/es.md` |
+
+### Step 2: 横断チェック — 「どの課題でも確認すべき観点」
+
+大分類で知識ファイルを引いた後、以下を**全タスクに対してチェック**する。該当したら追加で参照する。
+
+| 観点 | 問い | 該当したら参照 |
+|---|---|---|
+| 🛡️ 安全 | 攻撃される可能性は？認証・認可は必要？ | `ipa/ap.md` + `ipa/au.md` |
+| ⚖️ 倫理・法令 | 個人情報を扱う？公平性は？法的リスクは？ | `ds-advanced/ethics.md` |
+| ⚡ 性能 | 遅くならない？リソースは足りる？ | `ipa/fe.md` |
+| ✅ テスト | どうやって正しさを確認する？ | `python3/best-practices.md` §5 |
+| 📝 伝達 | 結果を人に説明する必要がある？ | `ds-advanced/analytics.md`, `ds-expert/business.md` |
+| 🔢 数学的裏付け | 理論的な根拠が必要？ | `math-strategist/` → `index.md` |
+| 📏 コード品質 | コードを書く・変える？ | `practices/` → `index.md` |
+
+### 参照ルール
+- 大分類は**複数該当するのが普通**。全て参照する
+- 横断チェックは**毎回全項目を走査**する（該当なしならスキップ）
+- 知識ファイルの具体的なセクション番号（§）を引用して根拠を示す
+- 分類に迷ったら各分野の `index.md` の横断マップで確認する
+- 知識ファイルの内容が自身の学習済み知識と**矛盾する場合、その旨をユーザーに報告**し、どちらが正しいか判断を仰ぐ
+
+## 開発の考え方
+### 作り始める前に必ず確認
+- 同じ機能が既にコードベースのどこかにないか探す
+- 使っているライブラリに同じ機能がないか確認する
+- Context7 MCP でライブラリのドキュメントを参照する
+- **「自分で作る」より「既にあるものを使う」を優先する**
+
+## Task Management
+- タスクはプロジェクトルートの `tasks/` フォルダで管理する
+- タスクファイルの命名規則: `YYYYMMDD_TXXX_タスク名.md`（例: `20260303_T001_承認待ち状態API調査.md`）
+- `YYYYMMDD`: タスク作成日
+- `TXXX`: 3桁連番（プロジェクト内でユニーク）
+- タスクファイルには以下を記載する:
+  - 背景・目的
+  - 調査・作業結果（随時更新）
+  - 次のアクション
+- タスク完了後は `tasks/done/` フォルダにアーカイブする
+
+### テスト・開発フロー・セキュリティ
+- TDD手順・予測モデル検証・カバレッジ → `practices/testing.md`
+- ブランチ戦略・コミット規約・PR・ロールバック → `practices/git-workflow.md`
+- 入力検証・認証認可・秘密管理・ログ安全性 → `practices/security.md`
+- コーディングスタイル・命名・関数設計 → `practices/coding-style.md`
+- 調査→計画→実装→レビューの全体フロー → `practices/dev-workflow.md`
+
+## 困ったときのルール
+- **コマンドが3分返ってこない**: 止めて原因を調べる。何が起きたか報告する
+- **同じエラーが5回続く**: 同じやり方を繰り返さない。「何を試した / なぜダメだった / 次にどうする」を報告する
+- **大きく変える前に保存**: リファクタリングや大改修の前に、今の状態をコミットして戻れるようにする
+- **変えた後は確認**: 修正したら差分を見て、何が変わったかユーザーに要点を報告する
+
+## サブエージェントの使い分け
+別のエージェントに任せるとき:
+- 調べることが3つ以上あって、同時に進められる場合
+- 重い検索で会話の流れを止めたくない場合
+- 時間がかかる処理をバックグラウンドで走らせたい場合
+
+自分でやるとき:
+- どのファイルか分かっていて、すぐ見つかる場合
+- 2〜3ファイルの読み書きで終わる場合
+
+## Claude Code の注意点
+- `preview_eval` で `return` を使う場合は即時関数 `(function(){ ... return ...; })()` で包む
+- スマホ表示の確認は `preview_resize preset:mobile` を使う
+
+## Claude Code 高度機能の活用
+
+### Worktrees — 「壊しても大丈夫な別世界」で作業する
+- 大きな変更や実験をする時は、隔離環境（Worktree）を提案する
+- 本番は常に安全な状態を保つ。失敗してもworktreeを消すだけで元通り
+- こう言われたら提案する:
+  - 「試しに〜してみたい」「大幅に変えたい」「壊れても構わないから試して」
+
+### Headless mode — Claudeを自動実行する
+- `env -u CLAUDECODE claude -p "プロンプト"` でスクリプトから呼び出せる
+- こう言われたら提案する:
+  - 「毎日自動でやりたい」「定期実行したい」「APIの結果を自動分析したい」
 </content>
 
 ---
@@ -233,50 +382,322 @@ Layer 2の拡張手順として、UI/機能変更時に `test-debug-loop-protoco
 
 ---
 
-## 3. 開発プラクティス・コマンド・Hook
-
-### 3-1. 開発プラクティス（6ファイル）
+## 3. 開発プラクティス（6ファイル）・コマンド（4ファイル）・Hook（1ファイル）
 
 CLAUDE.mdから分離した実装ルール群。コードを書く・変えるタスクで横断チェック「📏 コード品質」が発火すると参照される。
 
-```bash
-mkdir -p ~/.claude/knowledge/practices
-cp knowledge/practices/*.md ~/.claude/knowledge/practices/
-```
+### `~/.claude/knowledge/practices/index.md`:
+<content>
+# practices/ — 開発プラクティス索引
 
-配置後の構成:
-```
-~/.claude/knowledge/practices/
-├── index.md            ← 索引 + 課題→ファイルマッピング
-├── coding-style.md     ← 命名・関数設計・エラー処理
-├── security.md         ← 入力検証・認証認可・秘密管理
-├── testing.md          ← TDD手順 + 予測モデル検証（非TDD）+ カバレッジ
-├── git-workflow.md     ← ブランチ戦略・コミット規約・PR
-└── dev-workflow.md     ← 調査→計画→実装→レビュー（PDCA対応）
-```
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
 
-### 3-2. スラッシュコマンド（4ファイル）
+## ファイル一覧
 
-```bash
-mkdir -p ~/.claude/commands
-cp commands/*.md ~/.claude/commands/
-```
+| ファイル | 内容 | 関連IPA知識 |
+|---|---|---|
+| `coding-style.md` | 命名・関数設計・エラー処理・ファイル構成 | `ipa/ap.md` §SOLID |
+| `security.md` | 入力検証・認証認可・秘密管理・ログ・インシデント対応 | `ipa/ap.md` + `ipa/au.md` |
+| `testing.md` | TDD手順・予測モデル検証・カバレッジ戦略 | `ipa/sm.md` §テスト管理 |
+| `git-workflow.md` | ブランチ戦略・コミット規約・PR・ロールバック | `ipa/pm.md` §構成管理 |
+| `dev-workflow.md` | 調査→計画→実装→レビュー（PDCA対応） | `quality/process.md` |
 
-| コマンド | 用途 |
+## 課題→ファイル逆引き
+
+| やりたいこと | 参照ファイル |
 |---|---|
-| `/5s` | 作業開始前の5Sチェック（git status + リソース確認） |
-| `/knowledge` | 課題分析→知識ファイル一括参照→要約 |
-| `/quality-review` | PDCA完了状況チェック |
-| `/risk` | git diff分析→リスクレベル自動判定 |
+| コードを書く・変える | `coding-style.md` → `security.md` → `testing.md` |
+| バグを直す | `testing.md` §バグ修正手順 → `dev-workflow.md` |
+| 新機能を追加する | `dev-workflow.md` → `coding-style.md` → `testing.md` |
+| PRを出す・レビューする | `git-workflow.md` → `testing.md` §カバレッジ |
+| リファクタリングする | `coding-style.md` → `testing.md` §回帰テスト → `git-workflow.md` |
+| デプロイする | `git-workflow.md` §ロールバック → `security.md` §インシデント対応 |
+| 予測モデルを作る | `testing.md` §予測モデル検証（TDDではない） |
+</content>
 
-### 3-3. Hook（コミット前リスク判定リマインダー）
+### `~/.claude/knowledge/practices/coding-style.md`:
+<content>
+# コーディングスタイル
 
-```bash
-mkdir -p ~/.claude/hooks
-cp hooks/process-gate.py ~/.claude/hooks/
-```
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
 
-`~/.claude/settings.json` に以下を追加（既存設定とマージ）:
+## 1. 基本原則
+- 自明なコードコメントは書かない（コード自体が説明になるよう命名する）
+- 不要な空白は削除する
+- 新規ファイルは必ず末尾に改行を入れる
+- 「自分で作る」より「既にあるものを使う」を優先する
+
+## 2. 命名規則
+- **変数・関数**: 何をするか/何を表すかが名前だけで分かること
+- **真偽値**: `is`, `has`, `can`, `should` プレフィックス
+- **定数**: UPPER_SNAKE_CASE
+- **略語禁止**: `cnt` → `count`, `mgr` → `manager`（ドメイン用語は例外）
+
+## 3. 関数設計（SOLID原則準拠 — `ipa/ap.md` §6）
+- **単一責任**: 1関数 = 1つの仕事。20行を超えたら分割を検討
+- **開放閉鎖**: 既存コードを変えずに拡張できる設計
+- **依存性逆転**: 具象ではなく抽象に依存する
+- **副作用の明示**: 状態を変更する関数は名前で明示（`updateX`, `deleteY`）
+
+## 4. エラー処理
+- **早期リターン**: 異常系を先に処理し、正常系のネストを浅く保つ
+- **エラーの握りつぶし禁止**: catch したら必ずログ出力 or 再throw
+- **ユーザー向け vs 開発向け**: エラーメッセージは2層
+
+## 5. ファイル構成
+- 1ファイル = 1つの責務（モジュール単位）
+- インポートは標準ライブラリ → サードパーティ → 自プロジェクトの順
+- 未使用のインポート・変数は残さない
+- マジックナンバー禁止（定数または設定値として定義）
+</content>
+
+### `~/.claude/knowledge/practices/security.md`:
+<content>
+# セキュリティプラクティス
+
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
+
+## 1. 入力検証（ゼロトラスト原則）
+- ユーザー/API/外部サービスからのデータは**全て信頼しない**
+- 検証項目: 型・範囲・形式・長さ・文字種
+
+## 2. 認証・認可
+- 管理系エンドポイントには必ず認証を設ける
+- トークン/APIキーはリクエストヘッダーで受け渡し（URLパラメータ禁止）
+- 最小権限の原則
+
+## 3. 秘密情報管理
+- APIキー・パスワード・トークンをコードに直書き**禁止**
+- 環境変数 or 秘密管理ツールを使う
+- `.env` ファイルは `.gitignore` に必ず含める
+
+## 4. エラー情報の保護
+- 本番環境でスタックトレースを外部に返さない
+- 内部パス・DB構造をエラーレスポンスに含めない
+
+## 5. 依存パッケージの安全性
+- 定期的に `npm audit` / `pip audit` で脆弱性チェック
+
+## 6. ログの安全性
+- 個人情報・パスワード・トークンをログに出力しない
+- ログには操作者・日時・操作内容・結果を記録
+
+## 7. インシデント対応
+- 発生時: 検知 → 影響範囲特定 → 封じ込め → 復旧 → 原因分析
+- 再発防止: 根本原因に対する是正処置 + 水平展開
+</content>
+
+### `~/.claude/knowledge/practices/testing.md`:
+<content>
+# テストプラクティス
+
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
+
+## 1. テスト駆動開発（TDD）— 入出力が明確なコード
+1. テストを先に書く → 失敗を確認（Red）
+2. テストをパスさせる最小限の実装（Green）
+3. リファクタリング（Refactor）
+4. 繰り返す
+
+## 2. 予測モデル検証 — TDDではなく仮説検証型
+適用: 機械学習・統計予測等、正解が事前に分からないもの
+1. 仮説を立てる → 2. ベースライン記録 → 3. 実験 → 4. 評価 → 5. 採用/棄却 → 6. 記録
+- データパイプラインや特徴量計算はTDD、予測精度は仮説検証型
+
+## 3. バグ修正手順
+1. 再現テスト作成 → 2. 原因特定 → 3. 最小修正 → 4. 回帰確認 → 5. 水平展開
+
+## 4. カバレッジ戦略
+- 新規コード: TDD / 既存修正: テスト先追加 / リファクタ: 振る舞い固定テスト
+
+## 5. テストの3層構造
+| 層 | 対象 | タイミング |
+|---|---|---|
+| ユニットテスト | 関数・モジュール | コード変更の都度 |
+| 統合/E2Eテスト | API・画面フロー | PR作成時・デプロイ前 |
+| 本番動作確認 | 実環境 | デプロイ後 |
+</content>
+
+### `~/.claude/knowledge/practices/git-workflow.md`:
+<content>
+# Git ワークフロー
+
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
+
+## 1. ブランチ戦略（GitHub Flow）
+- `main` は常にデプロイ可能。変更は feature ブランチ → PR → マージ
+
+## 2. コミット規約
+- 1機能/1バグ修正 = 1コミット。動詞で始める（Add/Fix/Update/Remove/Refactor）
+
+## 3. 変更前の安全策
+- 大きな変更の前に現状をコミット。高リスクはWorktreeで作業
+
+## 4. PR
+- タイトル70文字以内。本文に背景・変更内容・テスト計画
+
+## 5. ロールバック
+- デプロイ前にロールバック手順を確認。問題時は即座に前バージョンに戻す
+
+## 6. リスクレベル別の運用
+| リスク | 対応 |
+|---|---|
+| 🟢 低 | 通常フロー |
+| 🟡 中 | 先にコミットしてから着手 |
+| 🟠 高 | 影響範囲を洗い出してから着手 |
+| 🔴 最高 | Worktreeで作業 |
+</content>
+
+### `~/.claude/knowledge/practices/dev-workflow.md`:
+<content>
+# 開発ワークフロー
+
+> **プロジェクト CLAUDE.md の指定が優先**。ここは汎用デフォルト。
+
+## 全体フロー: 受入 → 調査 → 計画(Plan) → 実装(Do) → 検証(Check) → 改善(Act)
+
+## 1. 受入 — 目的と完了条件を確認。不明点は先に質問
+## 2. 調査 — 既存コード検索、ライブラリ確認、影響範囲特定
+## 3. 計画（Plan） — 受入基準明文化、リスク判定、実装方針
+## 4. 実装（Do） — TDD or 仮説検証型。1機能=1コミット
+## 5. 検証（Check） — ユニット→統合→本番の3層。diff確認・報告
+## 6. 改善（Act） — 問題時は根本原因分析→是正→水平展開
+</content>
+
+### `~/.claude/commands/5s.md`:
+<content>
+# /5s — 作業開始前の5Sチェック
+
+新しいタスクを始める前に、作業環境を整える。
+
+## 実行内容
+1. 片付け — 裏で動きっぱなしのプロセスがないか確認
+2. 現状確認 — `git status` でブランチ・未コミット変更を確認
+3. 健康チェック — CPU/メモリ/ディスク使用率を確認
+4. ルール確認 — CLAUDE.md / memory が最新か確認
+5. 手順開始 — TodoWrite でタスクリスト作成
+
+全チェック結果を一覧で報告する。異常があれば対処を提案する。
+</content>
+
+### `~/.claude/commands/knowledge.md`:
+<content>
+# /knowledge — 知識ベース参照
+
+課題を分析し、必要な知識ファイルを特定して参照する。
+1. ユーザーの課題を分析
+2. CLAUDE.md §知識ベース自動参照 の2層構造（大分類12 + 横断チェック7）で分類
+3. 該当する知識ファイルを Read
+4. 要約して課題への適用方法を提示
+
+$ARGUMENTS に課題の説明がある場合はそれを分析対象にする。
+</content>
+
+### `~/.claude/commands/quality-review.md`:
+<content>
+# /quality-review — PDCA完了状況チェック
+
+現在のタスクについて、PDCAの各段階の完了状況を確認する。
+- Plan: 受入基準・リスク判定・影響範囲
+- Do: テスト先行・品質ゲート・コミット粒度
+- Check: テスト通過・diff確認・報告
+- Act: 根本原因分析・水平展開
+
+未完了の項目があれば指摘する。
+</content>
+
+### `~/.claude/commands/risk.md`:
+<content>
+# /risk — リスクレベル自動判定
+
+git diff を分析し、変更のリスクレベルを判定する。
+- 🟢 低: 新ファイル/テスト追加/20行以下
+- 🟡 中: 既存コード修正/100行以下 → 先にコミット
+- 🟠 高: 複数機能影響/300行以下 → 影響範囲洗い出し
+- 🔴 最高: DB/cron変更/300行超 → Worktree
+
+判定結果と推奨アクションを表示する。
+</content>
+
+### `~/.claude/hooks/process-gate.py`:
+<content>
+#!/usr/bin/env python3
+"""
+process-gate.py — コミット前リスク判定リマインダー
+PreToolUse / Bash hook: git commit を検知してリスクレベルを推定表示する。
+ブロックしない（常に exit 0）。リマインダーのみ。
+"""
+import sys
+import io
+import json
+import subprocess
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
+
+def main():
+    try:
+        data = json.load(sys.stdin)
+    except (json.JSONDecodeError, EOFError):
+        sys.exit(0)
+
+    command = data.get("tool_input", {}).get("command", "")
+    if "git commit" not in command:
+        sys.exit(0)
+
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--stat"],
+            capture_output=True, text=True, timeout=5
+        )
+        stat = result.stdout.strip()
+    except Exception:
+        sys.exit(0)
+
+    if not stat:
+        sys.exit(0)
+
+    lines = stat.split("\n")
+    summary = lines[-1] if lines else ""
+
+    files_changed = 0
+    insertions = 0
+    deletions = 0
+    for part in summary.split(","):
+        part = part.strip()
+        if "file" in part:
+            files_changed = int(part.split()[0])
+        elif "insertion" in part:
+            insertions = int(part.split()[0])
+        elif "deletion" in part:
+            deletions = int(part.split()[0])
+
+    total_changes = insertions + deletions
+
+    if total_changes <= 20 and files_changed <= 2:
+        level = "🟢 低リスク"
+    elif total_changes <= 100 and files_changed <= 5:
+        level = "🟡 中リスク"
+    elif total_changes <= 300 or files_changed <= 10:
+        level = "🟠 高リスク"
+    else:
+        level = "🔴 最高リスク"
+
+    print(
+        f"\n⚙️ リスク判定リマインダー: {level}\n"
+        f"   {files_changed}ファイル / +{insertions} -{deletions} 行\n"
+        f"   → リスクに応じた品質ゲートを確認してください（quality/risks.md）\n",
+        file=sys.stderr
+    )
+    sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
+</content>
+
+Hookを有効化するには `~/.claude/settings.json` に以下を追加（既存設定とマージ）:
 
 ```json
 {
