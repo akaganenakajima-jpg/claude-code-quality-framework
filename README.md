@@ -44,6 +44,7 @@ Claude Code が自動的に全ファイルを作成します。
 | 知識ベース — DS数学ストラテジスト上級（5ファイル） | `~/.claude/knowledge/math-strategist/` — 線形代数・最適化・情報理論 |
 | 知識ベース — E資格（5ファイル） | `~/.claude/knowledge/e-cert/` — 深層学習基礎・アーキテクチャ・応用 |
 | 知識ベース — Python3基礎（5ファイル） | `~/.claude/knowledge/python3/` — 構文・標準ライブラリ・OOP・ベストプラクティス |
+| 知識ベース — UX心理学（6ファイル） | `~/.claude/knowledge/ux-psychology/` — 43法則（情報設計・選択設計・動機設計・印象設計・認知の罠） |
 
 ## フレームワーク構成
 
@@ -67,7 +68,8 @@ claude-code-quality-framework/
 │   ├── ds-expert/                  ← DSエキスパート（4分野・5ファイル）
 │   ├── math-strategist/            ← DS数学ストラテジスト上級（4分野・5ファイル）
 │   ├── e-cert/                     ← E資格（4分野・5ファイル）
-│   └── python3/                    ← Python3基礎（4分野・5ファイル）
+│   ├── python3/                    ← Python3基礎（4分野・5ファイル）
+│   └── ux-psychology/              ← UX心理学（5クラスタ・6ファイル）
 ├── hooks/                          ← Hook ★NEW
 │   └── process-gate.py             ← コミット前リスク判定リマインダー
 ├── commands/                       ← スラッシュコマンド ★NEW
