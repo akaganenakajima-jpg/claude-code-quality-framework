@@ -1088,6 +1088,62 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 
 ⚠️ MCPの追加はこのセットアップの範囲外です。ユーザー自身で必要に応じて追加してください。
 
+### 5-3. Everything Claude Code (ECC) のインストール
+
+[everything-claude-code](https://github.com/affaan-m/everything-claude-code) は、コード品質（フォーマット・型・テスト実行）に特化した Claude Code 拡張パッケージです。
+当フレームワーク（プロセス品質）と **競合ゼロ** で併用できます。
+
+| 項目 | 当フレームワーク | ECC |
+|---|---|---|
+| 対象 | プロセス品質（判断/知識/規律/デザイン） | コード品質（フォーマット/型/テスト実行） |
+| 格納先 | `~/.claude/CLAUDE.md` + `knowledge/` + `skills/` | `~/.claude/rules/` |
+
+#### 前提条件
+- Node.js >= 18（§5-1 でインストール済みであること）
+
+#### 手順
+
+**AskUserQuestion** でユーザーに確認:
+
+**質問**: 「Everything Claude Code (ECC) をインストールしますか？コード品質ルール（フォーマット・型・テスト等）が追加されます。当フレームワークとの競合はありません。」
+
+| 選択肢 | 動作 |
+|--------|------|
+| **🚀 インストールする** | 使用言語を選んで npx でインストール |
+| **⏭️ スキップ** | §6（検証）に進む |
+
+「インストールする」が選択された場合:
+
+1. **AskUserQuestion** で主要言語を選択:
+
+**質問**: 「メインで使用するプログラミング言語を選んでください（ECC のルールセットが言語に合わせて最適化されます）:」
+
+| 選択肢 |
+|--------|
+| **TypeScript** |
+| **Python** |
+| **Golang** |
+| **Swift** |
+| **Kotlin** |
+| **PHP** |
+| **Perl** |
+| **C++** |
+
+2. 選択された言語で ECC をインストール:
+```bash
+npx ecc-install <選択された言語>
+```
+
+3. インストール結果を確認:
+```bash
+# ECC のルールファイルが配置されたか確認
+ls ~/.claude/rules/ 2>/dev/null && echo "✅ ECC ルール配置完了" || echo "❌ ECC ルールが見つかりません"
+# インストール状態の確認
+cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インストール状態記録あり" || echo "⚠️ インストール状態ファイルなし"
+```
+
+⚠️ ECC は `npx` 経由で常に最新版をインストールします。アップデート時も同じコマンドを再実行するだけでOKです。
+
 ---
 
 ## 6. 検証
@@ -1121,6 +1177,9 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
    - `~/.claude/skills/apple-hig-designer/resources/design-tokens.css`
    - `~/.claude/skills/apple-hig-designer/resources/components.jsx`
    - `~/.claude/skills/apple-hig-designer/resources/ui-patterns.md`
+9. ECC をインストールした場合:
+   - `~/.claude/rules/` フォルダが存在し、ルールファイルが配置されている
+   - `~/.claude/ecc/install-state.json` が存在する
 
 全て確認できたら、以下の形式でセットアップ結果をユーザーに表示してください:
 
@@ -1144,6 +1203,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 | 知識ベース — E資格（5ファイル） | ✅ |
 | 知識ベース — Python3基礎（5ファイル） | ✅ |
 | 知識ベース — UX心理学（6ファイル） | ✅ |
+| ECC（everything-claude-code） | ✅ インストール済 / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 
 💡 MCPサーバーの追加は recommended-tools.md を参照してください。
@@ -1162,6 +1222,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 | Hook（process-gate.py） | 🔄 更新 / ✅ 変更なし |
 | Apple HIG スキル | 🔄 更新 / ✅ 変更なし |
 | 知識ベース（8分野） | 🔄 N分野更新 / ✅ 変更なし |
+| ECC（everything-claude-code） | 🔄 更新 / ✅ 変更なし / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 
 📝 更新されたファイル:
