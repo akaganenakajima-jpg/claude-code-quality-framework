@@ -74,6 +74,7 @@
 | 💰 決める | 投資判断・費用対効果・経営報告・KPI設計 | `ipa/st.md`, `ds-expert/business.md` |
 | 🧹 整える | データ前処理・クレンジング・ドキュメント整備 | `ds-advanced/data-engineering.md` |
 | 🔌 組み込む | ハードウェア制御・IoT・センサー・リアルタイム処理 | `ipa/es.md` |
+| 🎨 UIを設計する | 画面設計・レイアウト・UX改善・コンバージョン最適化 | `ux-psychology/` → `index.md` |
 
 ### Step 2: 横断チェック — 「どの課題でも確認すべき観点」
 
@@ -88,6 +89,7 @@
 | 📝 伝達 | 結果を人に説明する必要がある？ | `ds-advanced/analytics.md`, `ds-expert/business.md` |
 | 🔢 数学的裏付け | 理論的な根拠が必要？ | `math-strategist/` → `index.md` |
 | 📏 コード品質 | コードを書く・変える？ | `practices/` → `index.md` |
+| 🎨 UX心理学 | UIを設計・レビューする？ユーザー行動に影響する？ | `ux-psychology/` → `index.md` |
 
 ### 参照ルール
 - 大分類は**複数該当するのが普通**。全て参照する
