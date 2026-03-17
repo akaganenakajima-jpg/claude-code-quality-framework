@@ -11,190 +11,12 @@
 `~/.claude/CLAUDE.md` に以下を書き込んでください:
 
 <content>
-# CLAUDE.md — グローバル設定（全プロジェクト共通）
+この内容は `global/CLAUDE.md` と同一です。
+セットアップ時は `global/CLAUDE.md` をそのまま `~/.claude/CLAUDE.md` にコピーしてください。
 
-> プロジェクト固有ルールは各リポジトリの `CLAUDE.md` を参照
-
-## Conversation Guidelines
-- 常に日本語で会話する
-
-## Code Style Guidelines
-- 自明なコードコメントは書かないでください
-- 不要な空白は削除してください
-- 新規ファイルを作成する際は必ず末尾に改行を足すこと
-
-## GitHub Operations
-- GitHubのリソース（リポジトリ、Issue、PR、コード等）を操作する際は、`gh` コマンド（GitHub CLI）を使用する
-- WebFetchやWebSearchではなく、`gh` コマンドを優先する
-
-## 品質管理 (ISO9001:2015準拠)
-品質方針: 「証拠に基づき、正しく・安全に・持続的に動くシステムを提供する」
-詳細・品質目標 → `~/.claude/quality/policy.md`
-
-### PDCAゲート（全タスクに適用。省略禁止）
-1. **Plan**: 受入基準+リスク判定+影響範囲を明文化してから着手 → `quality/process.md`
-2. **Do**: TDD + 品質ゲート通過 → `quality/gates.md`
-3. **Check**: 3層検証（unit→E2E→本番）→ `quality/review.md`
-4. **Act**: 不適合→根本原因→是正→水平展開 → `quality/nonconformity.md`
-
-### リスク判定（変更前に必ず実施）→ `quality/risks.md`
-- 🟢 通常: テスト追加・コメント修正・新規ファイル
-- 🟡 標準: 既存コード修正・設定変更（revert可能）→ commit後に着手
-- 🟠 強化: 複数機能に影響・API変更 → 影響分析必須
-- 🔴 最高: DB変更・cron変更・デプロイ → Worktree必須
-
-### 品質記録
-- 不適合発生時 → `tasks/` にタスク化（根本原因・是正・水平展開を記載）
-- セッション終了時 → 品質KPI更新 → `quality/metrics.md`
-- 文書管理ルール → `quality/docs.md`
-
-## 5S — 新タスク開始前の必須プロトコル
-新しいタスクに取り掛かる前に、必ず以下の5Sを実施する。省略禁止。
-
-### 1. 整理（Seiri）— 不要プロセスの排除
-- タスクマネージャー等で実行中プロセスを確認
-- ゾンビプロセス・不要なバックグラウンドジョブがあれば kill
-- 前タスクのログファイル・一時ファイルが不要なら削除
-
-### 2. 整頓（Seiton）— 作業環境の確認
-- 現在の git ブランチ・uncommitted changes を確認（`git status`）
-- 作業ディレクトリが正しいか確認
-- 必要なファイル・データが揃っているか確認
-
-### 3. 清掃（Seiso）— リソースの健全性確認
-- CPU / メモリ / ディスクの使用率を確認
-- 異常値（CPU>50%持続、メモリ>80%、ディスク>90%）があれば先に解決
-- **異常は運用（手動kill等）ではなく仕組み（limiter/watchdog等）で解決**する
-
-### 4. 清潔（Seiketsu）— ルール・設定の最新化
-- プロジェクトの CLAUDE.md / memory が最新か確認
-- 前タスクで得た知見がメモリに記録されているか確認
-
-### 5. 躾（Shitsuke）— 手順の遵守
-- タスク管理（TodoWrite）を開始
-- 必要ならタスクファイル（`tasks/`）を作成
-
-## 知識ベース自動参照
-タスクを受けたら（またはこれから自分が作業するとき）、**課題の本質を分析**し、該当する知識ファイルを Read してから作業する。
-
-### Step 1: 大分類 — 「何をする課題か？」（複数該当OK）
-
-| 大分類 | 判断基準 | 参照ファイル |
-|---|---|---|
-| 🏗️ つくる | ソフトウェア・システム・APIなどを設計・実装する | `ipa/sa.md`（構成）, `ipa/ap.md`（実装）, `python3/`（言語） |
-| 🗄️ 貯める・出す | データを保存・検索・構造化する | `ipa/db.md` |
-| 🌐 つなぐ | 機器・サービス同士を通信させる | `ipa/nw.md` |
-| 📊 数字で理解する | データを分析・集計・可視化して意味を読み取る | `stats/prob.md`, `stats/inference.md`, `ds-advanced/analytics.md` |
-| 🔮 予測・発見する | 未来を予測する/パターンを見つける/原因を特定する | `stats/regression.md`, `stats/ts.md`, `stats/multivariate.md`, `stats/ml.md` |
-| 🤖 AIに任せる | 機械学習・深層学習で自動化する | `ds-advanced/modeling.md`, `e-cert/` → `index.md` |
-| 🧪 比べる・試す | A/Bテスト・実験・効果検証・因果推論 | `stats/doe.md`, `stats/bayes.md`, `stats/stochastic.md` |
-| 🚀 届ける・動かす | 本番デプロイ・CI/CD・MLOps・監視・障害対応 | `ipa/sm.md`, `ds-expert/system-design.md` |
-| 📋 まわす | プロジェクト管理・スケジュール・体制・見積もり | `ipa/pm.md` |
-| 💰 決める | 投資判断・費用対効果・経営報告・KPI設計 | `ipa/st.md`, `ds-expert/business.md` |
-| 🧹 整える | データ前処理・クレンジング・ドキュメント整備 | `ds-advanced/data-engineering.md` |
-| 🔌 組み込む | ハードウェア制御・IoT・センサー・リアルタイム処理 | `ipa/es.md` |
-
-### Step 2: 横断チェック — 「どの課題でも確認すべき観点」
-
-大分類で知識ファイルを引いた後、以下を**全タスクに対してチェック**する。該当したら追加で参照する。
-
-| 観点 | 問い | 該当したら参照 |
-|---|---|---|
-| 🛡️ 安全 | 攻撃される可能性は？認証・認可は必要？ | `ipa/ap.md` + `ipa/au.md` |
-| ⚖️ 倫理・法令 | 個人情報を扱う？公平性は？法的リスクは？ | `ds-advanced/ethics.md` |
-| ⚡ 性能 | 遅くならない？リソースは足りる？ | `ipa/fe.md` |
-| ✅ テスト | どうやって正しさを確認する？ | `python3/best-practices.md` §5 |
-| 📝 伝達 | 結果を人に説明する必要がある？ | `ds-advanced/analytics.md`, `ds-expert/business.md` |
-| 🔢 数学的裏付け | 理論的な根拠が必要？ | `math-strategist/` → `index.md` |
-
-### 参照ルール
-- 大分類は**複数該当するのが普通**。全て参照する
-- 横断チェックは**毎回全項目を走査**する（該当なしならスキップ）
-- 知識ファイルの具体的なセクション番号（§）を引用して根拠を示す
-- 分類に迷ったら各分野の `index.md` の横断マップで確認する
-- 知識ファイルの内容が自身の学習済み知識と**矛盾する場合、その旨をユーザーに報告**し、どちらが正しいか判断を仰ぐ
-
-## Development Philosophy
-### Before Implementation
-- 新しい機能を実装する前に、以下を必ず確認する：
-1. 既存のコードベース内に同様の実装やユーティリティがないか検索する
-2. 使用しているライブラリ/フレームワークに該当する API や機能がないか確認する
-3. Context7 MCP（`mcp__context7__`）を使ってライブラリのドキュメントを参照する
-- 「自分で実装する」より「既存の解決策を使う」を優先する
-
-## Task Management
-- タスクはプロジェクトルートの `tasks/` フォルダで管理する
-- タスクファイルの命名規則: `YYYYMMDD_TXXX_タスク名.md`（例: `20260303_T001_承認待ち状態API調査.md`）
-- `YYYYMMDD`: タスク作成日
-- `TXXX`: 3桁連番（プロジェクト内でユニーク）
-- タスクファイルには以下を記載する:
-  - 背景・目的
-  - 調査・作業結果（随時更新）
-  - 次のアクション
-- タスク完了後は `tasks/done/` フォルダにアーカイブする
-
-### Test-Driven Development (TDD)
-- 原則としてテスト駆動開発（TDD）で進める
-- 期待される入出力に基づき、まずテストを作成する
-- 実装コードは書かず、テストのみを用意する
-- テストを実行し、失敗を確認する
-- テストが正しいことを確認できた段階でコミットする
-- その後、テストをパスさせる実装を進める
-- 実装中はテストを変更せず、コードを修正し続ける
-- すべてのテストが通過するまで繰り返す
-
-## 開発フロー（GitHub Flow）
-- 変更は feature ブランチで行い PR を経由して main にマージする
-- コミット粒度は「1機能/1バグ修正」を1コミットに。巨大コミット禁止
-- デプロイ前に E2E テストを実行する
-- デプロイ前にロールバック手順を確認する
-
-## セキュリティ原則（IPA セキュアコーディング準拠）
-- **入力値検証**: APIエンドポイントは必ずパラメータをバリデーションする（型・範囲・形式）
-- **エラー情報**: エラーレスポンスにスタックトレース・内部パス・DB構造を含めない
-- **依存パッケージ**: 定期的に `npm audit` を実行し高リスク脆弱性は即対応
-- **シークレット**: APIキー・認証情報をコードにハードコードしない
-- **ログ管理**: 個人情報・認証情報をログに出力しない
-
-## 行き詰まり・エラー対処プロトコル
-- **Bash が 3分無応答**: 強制中断し、原因（無限ループ/権限エラー/ネットワーク等）を特定して報告する
-- **同じエラーが 5回**: 同じアプローチを繰り返さず、別の解決策を検討する。「試したこと / 失敗理由 / 次の案」を報告する
-- **作業前の保存**: 大きな変更を始める前に `git add -p && git commit` で現状を保存する（特にリファクタリング前）
-- **変更後の確認**: 修正後は `git diff HEAD` で変更箇所を自分でも確認し、ユーザーに要点を報告する
-
-## Subagent 活用方針
-以下の条件を満たす場合は Task ツール（Explore/Bash/general-purpose）でサブエージェントに委譲する:
-- 独立した調査ステップが 3つ以上並列実行できる
-- 重い検索・探索でメインコンテキストを消費したくない
-- 長時間実行のバックグラウンド処理（`run_in_background: true`）が適切な場合
-
-委譲しない場合:
-- ファイルが特定されており、Glob/Grep で即座に見つかる単純検索
-- 2〜3ファイルの読み書きで完結するタスク
-
-## Claude Code ツール使用上の注意
-- `preview_eval` で `return` 文を使う場合は即時関数 `(function(){ ... return ...; })()` に包む
-- モバイルデザイン確認は `preview_resize preset:mobile` を使う
-
-## Claude Code 高度機能の活用
-
-### Worktrees（リスクの高い変更時に積極的に提案する）
-- 「大幅なUI変更」「破壊的リファクタリング」「実験的機能を試したい」場合は `EnterWorktree` を提案する
-- main は常にデプロイ可能な状態に保つ。失敗してもworktreeを削除するだけで戻せる
-- 提案タイミング: 「試しに〜したい」「〜を大幅に変えたい」「壊れても構わない」と言われた時
-
-### Headless mode（自動化・cron・スクリプト化の相談時に提案する）
-- 非インタラクティブ実行: `env -u CLAUDECODE claude -p "プロンプト"` または標準入力でデータを渡す
-- `CLAUDECODE` 環境変数が設定されていると起動できないため `env -u CLAUDECODE` が必須
-- 提案タイミング: 「毎日自動で〜したい」「cronで〜を実行したい」「APIの結果をClaudeに分析させたい」と言われた時
-
-### Hooks（デプロイ安全性強化・新プロジェクトのガード設定時に提案する）
-- `.claude/settings.json` の `hooks` セクションで設定（プロジェクト単位）
-- PreToolUse: exit 1 でツールをブロック / exit 0 で許可。stdin に JSON でツール情報が来る
-- PostToolUse: 常に exit 0（リマインダー・追加コンテキスト表示）
-- 典型パターン:
-  - デプロイ前 E2E 強制: Bash hook で `.e2e_passed` タイムスタンプを確認
-  - 禁止ファイルガード: Edit/Write hook でファイルパスをチェック
+```bash
+cp global/CLAUDE.md ~/.claude/CLAUDE.md
+```
 </content>
 
 ---
@@ -411,7 +233,74 @@ Layer 2の拡張手順として、UI/機能変更時に `test-debug-loop-protoco
 
 ---
 
-## 3. 知識ベース
+## 3. 開発プラクティス・コマンド・Hook
+
+### 3-1. 開発プラクティス（6ファイル）
+
+CLAUDE.mdから分離した実装ルール群。コードを書く・変えるタスクで横断チェック「📏 コード品質」が発火すると参照される。
+
+```bash
+mkdir -p ~/.claude/knowledge/practices
+cp knowledge/practices/*.md ~/.claude/knowledge/practices/
+```
+
+配置後の構成:
+```
+~/.claude/knowledge/practices/
+├── index.md            ← 索引 + 課題→ファイルマッピング
+├── coding-style.md     ← 命名・関数設計・エラー処理
+├── security.md         ← 入力検証・認証認可・秘密管理
+├── testing.md          ← TDD手順 + 予測モデル検証（非TDD）+ カバレッジ
+├── git-workflow.md     ← ブランチ戦略・コミット規約・PR
+└── dev-workflow.md     ← 調査→計画→実装→レビュー（PDCA対応）
+```
+
+### 3-2. スラッシュコマンド（4ファイル）
+
+```bash
+mkdir -p ~/.claude/commands
+cp commands/*.md ~/.claude/commands/
+```
+
+| コマンド | 用途 |
+|---|---|
+| `/5s` | 作業開始前の5Sチェック（git status + リソース確認） |
+| `/knowledge` | 課題分析→知識ファイル一括参照→要約 |
+| `/quality-review` | PDCA完了状況チェック |
+| `/risk` | git diff分析→リスクレベル自動判定 |
+
+### 3-3. Hook（コミット前リスク判定リマインダー）
+
+```bash
+mkdir -p ~/.claude/hooks
+cp hooks/process-gate.py ~/.claude/hooks/
+```
+
+`~/.claude/settings.json` に以下を追加（既存設定とマージ）:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python ~/.claude/hooks/process-gate.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+> Windows の場合: `command` のパスを `python C:/Users/<username>/.claude/hooks/process-gate.py` に変更
+
+---
+
+## 4. 知識ベース
 
 7分野の専門知識リファレンスを導入します。
 GitHubからリポジトリをクローンし、知識ファイルをコピーしてください。
@@ -530,9 +419,9 @@ rm -rf "$TEMP/ccqf"
 
 ---
 
-## 4. 前提プログラムのインストール & 推奨ツール案内
+## 5. 前提プログラムのインストール & 推奨ツール案内
 
-### 4-1. 前提プログラムの最新バージョンをリサーチ & インストール
+### 5-1. 前提プログラムの最新バージョンをリサーチ & インストール
 
 MCPサーバーやビルドツールに必要な前提プログラムを確認・インストールします。
 **バージョン要件は変わるため、WebSearchで最新の推奨バージョンを都度確認すること。**
@@ -617,7 +506,7 @@ fi
 
 5. インストール後に `--version` で**WebSearchで取得した最新バージョンと一致するか**確認すること。
 
-### 4-2. 推奨ツール（参考情報）
+### 5-2. 推奨ツール（参考情報）
 
 MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 推奨ツールの一覧は `recommended-tools.md` を参照してください。
@@ -626,7 +515,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 
 ---
 
-## 5. 検証
+## 6. 検証
 
 全ファイルが正しく配置されたか確認してください:
 
@@ -635,7 +524,13 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
    - `policy.md`, `process.md`, `gates.md`, `risks.md`
    - `nonconformity.md`, `metrics.md`, `review.md`, `docs.md`
 3. 各ファイルの先頭行がISO9001の条項番号を含んでいる
-4. 知識ベースフォルダに以下のファイルが存在する:
+4. 開発プラクティスフォルダに以下の6ファイルが存在する:
+   - `~/.claude/knowledge/practices/` — `index.md`, `coding-style.md`, `security.md`, `testing.md`, `git-workflow.md`, `dev-workflow.md`
+5. コマンドフォルダに以下の4ファイルが存在する:
+   - `~/.claude/commands/` — `5s.md`, `knowledge.md`, `quality-review.md`, `risk.md`
+6. Hookファイルが存在する:
+   - `~/.claude/hooks/process-gate.py`
+7. 知識ベースフォルダに以下のファイルが存在する:
    - `~/.claude/knowledge/ipa/` — 11ファイル（`index.md`, `fe.md`, `ap.md`, `db.md`, `nw.md`, `es.md`, `pm.md`, `sm.md`, `st.md`, `sa.md`, `au.md`）
    - `~/.claude/knowledge/stats/` — 10ファイル（`index.md`, `prob.md`, `inference.md`, `multivariate.md`, `ts.md`, `bayes.md`, `regression.md`, `doe.md`, `stochastic.md`, `ml.md`）
    - `~/.claude/knowledge/ds-advanced/` — 5ファイル（`index.md`, `data-engineering.md`, `analytics.md`, `modeling.md`, `ethics.md`）
@@ -653,6 +548,9 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 |--------------|------|
 | CLAUDE.md（グローバルルール） | ✅ |
 | 品質管理ファイル（8個） | ✅ |
+| 開発プラクティス（6ファイル） | ✅ |
+| スラッシュコマンド（4ファイル） | ✅ |
+| Hook（process-gate.py） | ✅ |
 | 知識ベース — IPA（11ファイル） | ✅ |
 | 知識ベース — 統計検定1級（10ファイル） | ✅ |
 | 知識ベース — DS発展（5ファイル） | ✅ |
