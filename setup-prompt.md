@@ -1,8 +1,117 @@
 # Claude Code 品質フレームワーク セットアップ
 
-以下の指示に従って、品質管理フレームワークの全ファイルを作成してください。
+以下の指示に従って、品質管理フレームワークの全ファイルをセットアップしてください。
 各ファイルの内容は `<content>` タグ内にそのまま記載されています。
 全て完了したら検証を実施してください。
+
+---
+
+## 0. インストールモード判定
+
+まず、既存インストールの有無を確認してください。
+
+### 判定方法
+
+`~/.claude/CLAUDE.md` が存在するか確認する:
+```bash
+ls -la ~/.claude/CLAUDE.md 2>/dev/null && echo "EXISTING" || echo "NEW"
+```
+
+### 🆕 新規インストール（`~/.claude/CLAUDE.md` が存在しない）
+
+→ **セクション1〜6を順番に実行**してください。
+
+### 🔄 アップデート（`~/.claude/CLAUDE.md` が既に存在する）
+
+既存インストールとの差分を確認し、変更があるファイルだけを更新します。
+
+#### Step 0-1: content ファイルの差分チェック
+
+以下の各ファイルについて、**既存ファイルを Read し、このプロンプト内の `<content>` ブロックと比較**してください:
+
+| # | ファイルパス | セクション |
+|---|---|---|
+| 1 | `~/.claude/CLAUDE.md` | §1 |
+| 2 | `~/.claude/quality/policy.md` | §2 |
+| 3 | `~/.claude/quality/process.md` | §2 |
+| 4 | `~/.claude/quality/gates.md` | §2 |
+| 5 | `~/.claude/quality/risks.md` | §2 |
+| 6 | `~/.claude/quality/nonconformity.md` | §2 |
+| 7 | `~/.claude/quality/metrics.md` | §2 |
+| 8 | `~/.claude/quality/review.md` | §2 |
+| 9 | `~/.claude/quality/docs.md` | §2 |
+| 10 | `~/.claude/knowledge/practices/index.md` | §3 |
+| 11 | `~/.claude/knowledge/practices/coding-style.md` | §3 |
+| 12 | `~/.claude/knowledge/practices/security.md` | §3 |
+| 13 | `~/.claude/knowledge/practices/testing.md` | §3 |
+| 14 | `~/.claude/knowledge/practices/git-workflow.md` | §3 |
+| 15 | `~/.claude/knowledge/practices/dev-workflow.md` | §3 |
+| 16 | `~/.claude/commands/5s.md` | §3 |
+| 17 | `~/.claude/commands/knowledge.md` | §3 |
+| 18 | `~/.claude/commands/quality-review.md` | §3 |
+| 19 | `~/.claude/commands/risk.md` | §3 |
+| 20 | `~/.claude/hooks/process-gate.py` | §3 |
+
+比較結果を以下の形式でテーブルにまとめてください:
+
+```
+| ファイル | 状態 | 変更内容（差分がある場合） |
+|---------|------|-------------------------|
+| CLAUDE.md | ✅ 最新 / 🔄 変更あり / 🆕 新規 | 変更の概要 |
+| ... | ... | ... |
+```
+
+#### Step 0-2: 知識ベースの差分チェック
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git /tmp/ccqf 2>/dev/null
+
+# 知識ベースの差分を一括チェック
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+  if [ -d ~/.claude/knowledge/$dir ]; then
+    echo "=== $dir ==="
+    diff -rq /tmp/ccqf/knowledge/$dir/ ~/.claude/knowledge/$dir/ 2>/dev/null || echo "(差分なし)"
+  else
+    echo "=== $dir === 🆕 新規（未インストール）"
+  fi
+done
+
+rm -rf /tmp/ccqf
+```
+
+Windows (Git Bash) の場合:
+```bash
+git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git "$TEMP/ccqf" 2>/dev/null
+
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+  if [ -d ~/.claude/knowledge/$dir ]; then
+    echo "=== $dir ==="
+    diff -rq "$TEMP/ccqf/knowledge/$dir/" ~/.claude/knowledge/$dir/ 2>/dev/null || echo "(差分なし)"
+  else
+    echo "=== $dir === 🆕 新規（未インストール）"
+  fi
+done
+
+rm -rf "$TEMP/ccqf"
+```
+
+#### Step 0-3: ユーザーに確認
+
+差分チェック結果をまとめて、AskUserQuestion で以下を提示:
+
+**質問**: 「インストール済みのフレームワークとの差分を検出しました。どのように更新しますか？」
+
+| 選択肢 | 動作 |
+|--------|------|
+| **🔄 変更ファイルのみ更新** | 差分があるファイルと新規ファイルだけを書き込む。変更なしのファイルはスキップ |
+| **🆕 全て上書き（フルインストール）** | セクション1〜6を通常通り全て実行 |
+| **📋 差分一覧だけ表示** | 更新せず、差分の詳細を表示して終了 |
+
+「変更ファイルのみ更新」が選択された場合:
+- content ファイル: 差分があるものだけ該当セクションの `<content>` で上書き
+- 知識ベース: 差分があるディレクトリだけ `git clone + cp` で更新
+- §5（前提プログラム）と §6（検証）は常に実行
 
 ---
 
@@ -975,6 +1084,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 
 全て確認できたら、以下の形式でセットアップ結果をユーザーに表示してください:
 
+**新規インストールの場合:**
 ```
 ## ✅ セットアップ完了
 
@@ -994,6 +1104,26 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 | 知識ベース — Python3基礎（5ファイル） | ✅ |
 | 知識ベース — UX心理学（6ファイル） | ✅ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
+
+💡 MCPサーバーの追加は recommended-tools.md を参照してください。
+```
+
+**アップデートの場合:**
+```
+## 🔄 アップデート完了
+
+| コンポーネント | 状態 |
+|--------------|------|
+| CLAUDE.md（グローバルルール） | 🔄 更新 / ✅ 変更なし |
+| 品質管理ファイル（8個） | 🔄 N個更新 / ✅ 変更なし |
+| 開発プラクティス（6ファイル） | 🔄 N個更新 / ✅ 変更なし |
+| スラッシュコマンド（4ファイル） | 🔄 N個更新 / ✅ 変更なし |
+| Hook（process-gate.py） | 🔄 更新 / ✅ 変更なし |
+| 知識ベース（8分野） | 🔄 N分野更新 / ✅ 変更なし |
+| 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
+
+📝 更新されたファイル:
+- (変更されたファイルのパスを列挙)
 
 💡 MCPサーバーの追加は recommended-tools.md を参照してください。
 ```
