@@ -51,6 +51,7 @@ ls -la ~/.claude/CLAUDE.md 2>/dev/null && echo "EXISTING" || echo "NEW"
 | 18 | `~/.claude/commands/quality-review.md` | §3 |
 | 19 | `~/.claude/commands/risk.md` | §3 |
 | 20 | `~/.claude/hooks/process-gate.py` | §3 |
+| 21 | `~/.claude/commands/cc-features.md` | §3 |
 
 比較結果を以下の形式でテーブルにまとめてください:
 
@@ -68,7 +69,7 @@ ls -la ~/.claude/CLAUDE.md 2>/dev/null && echo "EXISTING" || echo "NEW"
 git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git /tmp/ccqf 2>/dev/null
 
 # 知識ベースの差分を一括チェック
-for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology claude-code; do
   if [ -d ~/.claude/knowledge/$dir ]; then
     echo "=== $dir ==="
     diff -rq /tmp/ccqf/knowledge/$dir/ ~/.claude/knowledge/$dir/ 2>/dev/null || echo "(差分なし)"
@@ -92,7 +93,7 @@ Windows (Git Bash) の場合:
 ```bash
 git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git "$TEMP/ccqf" 2>/dev/null
 
-for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology claude-code; do
   if [ -d ~/.claude/knowledge/$dir ]; then
     echo "=== $dir ==="
     diff -rq "$TEMP/ccqf/knowledge/$dir/" ~/.claude/knowledge/$dir/ 2>/dev/null || echo "(差分なし)"
@@ -287,17 +288,14 @@ rm -rf "$TEMP/ccqf"
 - スマホ表示の確認は `preview_resize preset:mobile` を使う
 
 ## Claude Code 高度機能の活用
+Claude Code 自体の機能（サブエージェント・並列実行・Workflow・`/loop`・Routines・Hooks・Plugins・Memory・Checkpoints 等）で作業を速く・安全に・自動化できる。**詳細カタログと逆引きは `knowledge/claude-code/index.md`**（`/cc-features` でも呼べる）。最新の機能名・挙動は公式ドキュメントで都度確認する。
 
-### Worktrees — 「壊しても大丈夫な別世界」で作業する
-- 大きな変更や実験をする時は、隔離環境（Worktree）を提案する
-- 本番は常に安全な状態を保つ。失敗してもworktreeを消すだけで元通り
-- こう言われたら提案する:
-  - 「試しに〜してみたい」「大幅に変えたい」「壊れても構わないから試して」
-
-### Headless mode — Claudeを自動実行する
-- `env -u CLAUDECODE claude -p "プロンプト"` でスクリプトから呼び出せる
-- こう言われたら提案する:
-  - 「毎日自動でやりたい」「定期実行したい」「APIの結果を自動分析したい」
+こう言われたら該当機能を提案する:
+- 「試しに〜」「大幅に変えたい」「壊れてもいい」→ **Worktrees** で隔離（🔴最高リスク作業の標準）
+- 「毎日自動で」「定期実行したい」「APIの結果を自動分析」→ **Routines/`/schedule`**（クラウド・無人）または headless（`env -u CLAUDECODE claude -p "..."`）
+- 「5分ごとに確認」「見張り続けて」→ **`/loop`**（セッション中の繰り返し）
+- 重い調査が3つ以上で並行可能 → **並列サブエージェント**／数十〜数百ファイルの一括処理 → **Workflow**
+- 編集を巻き戻したい → **`/rewind`（Checkpoints）** ＋ 大改修前は git コミット
 </content>
 
 ---
@@ -514,7 +512,7 @@ Layer 2の拡張手順として、UI/機能変更時に `test-debug-loop-protoco
 
 ---
 
-## 3. 開発プラクティス（6ファイル）・コマンド（4ファイル）・Hook（1ファイル）
+## 3. 開発プラクティス（6ファイル）・コマンド（5ファイル）・Hook（1ファイル）
 
 CLAUDE.mdから分離した実装ルール群。コードを書く・変えるタスクで横断チェック「📏 コード品質」が発火すると参照される。
 
@@ -881,8 +879,8 @@ CLAUDE.mdから分離した実装ルール群。コードを書く・変える�
 
 1. ユーザーの課題/質問を分析する
 2. CLAUDE.md §知識ベース自動参照 の2層構造で分類する:
-   - **Step 1（大分類）**: 12カテゴリから該当を全て特定
-   - **Step 2（横断チェック）**: 6観点を全て走査
+   - **Step 1（大分類）**: 13カテゴリから該当を全て特定
+   - **Step 2（横断チェック）**: 8観点を全て走査
 3. 該当する知識ファイルを `~/.claude/knowledge/` から Read する
 4. 参照した内容を要約し、課題への適用方法を提示する
 
@@ -895,6 +893,8 @@ CLAUDE.mdから分離した実装ルール群。コードを書く・変える�
 - 数学: `~/.claude/knowledge/math-strategist/`
 - E資格: `~/.claude/knowledge/e-cert/`
 - Python: `~/.claude/knowledge/python3/`
+- UX心理学: `~/.claude/knowledge/ux-psychology/`
+- Claude Code運用: `~/.claude/knowledge/claude-code/`
 - 開発プラクティス: `~/.claude/knowledge/practices/`
 
 $ARGUMENTS に課題の説明がある場合はそれを分析対象にする。
@@ -981,6 +981,29 @@ git diff を分析し、変更のリスクレベルを判定する。
 
 判定結果と推奨アクションを表示する。
 詳細 → `quality/risks.md`
+</content>
+
+### `~/.claude/commands/cc-features.md`:
+<content>
+# /cc-features — Claude Code 高度機能の案内
+
+Claude Code 自体の機能（オーケストレーション・自動化・周辺ツール）を、いま手元の課題に合わせて提案する。
+
+## 手順
+
+1. `~/.claude/knowledge/claude-code/index.md` を Read し、逆引き表から課題に合う機能を特定する。
+2. 必要に応じて該当トピック（`orchestration.md` / `automation.md` / `tooling.md`）を Read して詳細を確認する。
+3. **記憶に頼らず**、機能名・コマンド名・挙動を公式ドキュメント（`https://code.claude.com/docs`）または `claude-code-guide` エージェントで裏取りしてから案内する。
+4. 「どの機能を・なぜ・どう呼び出すか」を、現在の作業文脈に紐づけて具体的に提示する。
+
+## 原則
+
+- このコマンドは機能一覧を持たない。**正本は `knowledge/claude-code/index.md`**（単一の情報源）。
+- index.md 冒頭の「最終検証日」が古い場合は、公式ドキュメントとの差分があり得る旨を添える。
+- 🔴 最高リスク作業には Worktrees、大規模変換には Workflow、定期実行には Routines/`/loop` を優先的に検討する（`quality/risks.md` と連動）。
+
+$ARGUMENTS に「やりたいこと」がある場合はそれを分析対象にする。
+ない場合は現在のコンテキストから課題を推定する。
 </content>
 
 ### `~/.claude/hooks/process-gate.py`:
@@ -1087,7 +1110,7 @@ Hookを有効化するには `~/.claude/settings.json` に以下を追加（既�
 
 ## 4. 知識ベース & Apple HIG スキル
 
-8分野の専門知識リファレンスと Apple HIG デザインスキルを導入します。
+8分野の専門知識リファレンス・Claude Code 高度機能の運用知識・Apple HIG デザインスキルを導入します。
 GitHubからリポジトリをクローンし、ファイルをコピーしてください。
 
 ```bash
@@ -1095,7 +1118,7 @@ GitHubからリポジトリをクローンし、ファイルをコピーして�
 git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git /tmp/ccqf
 
 # 2. 知識ベースをコピー
-for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology claude-code; do
   mkdir -p ~/.claude/knowledge/$dir
   cp /tmp/ccqf/knowledge/$dir/*.md ~/.claude/knowledge/$dir/
 done
@@ -1114,7 +1137,7 @@ rm -rf /tmp/ccqf
 Windows (Git Bash) の場合:
 ```bash
 git clone https://github.com/akaganenakajima-jpg/claude-code-quality-framework.git "$TEMP/ccqf"
-for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology; do
+for dir in ipa stats ds-advanced ds-expert math-strategist e-cert python3 ux-psychology claude-code; do
   mkdir -p ~/.claude/knowledge/$dir
   cp "$TEMP/ccqf/knowledge/$dir/"*.md ~/.claude/knowledge/$dir/
 done
@@ -1183,13 +1206,18 @@ rm -rf "$TEMP/ccqf"
 │   ├── stdlib.md           ← 標準ライブラリ
 │   ├── oop.md              ← オブジェクト指向
 │   └── best-practices.md   ← PEP8・テスト・パフォーマンス
-└── ux-psychology/          ← UX心理学（5クラスタ・6ファイル）
-    ├── index.md            ← 全43法則早見表・シナリオ逆引き
-    ├── information.md      ← 情報設計（認知負荷・段階的開示・視覚的階層）
-    ├── choice.md           ← 選択設計（アンカー・おとり・フレーミング・損失回避）
-    ├── motivation.md       ← 動機設計（目標勾配・変動報酬・ゲーミフィケーション）
-    ├── impression.md       ← 印象設計（美的ユーザビリティ・社会的証明・ピークエンド）
-    └── bias.md             ← 認知の罠（確証バイアス・共感ギャップ・ホーソン効果）
+├── ux-psychology/          ← UX心理学（5クラスタ・6ファイル）
+│   ├── index.md            ← 全43法則早見表・シナリオ逆引き
+│   ├── information.md      ← 情報設計（認知負荷・段階的開示・視覚的階層）
+│   ├── choice.md           ← 選択設計（アンカー・おとり・フレーミング・損失回避）
+│   ├── motivation.md       ← 動機設計（目標勾配・変動報酬・ゲーミフィケーション）
+│   ├── impression.md       ← 印象設計（美的ユーザビリティ・社会的証明・ピークエンド）
+│   └── bias.md             ← 認知の罠（確証バイアス・共感ギャップ・ホーソン効果）
+└── claude-code/            ← Claude Code 高度機能（運用・4ファイル）
+    ├── index.md            ← 機能逆引き・最終検証日
+    ├── orchestration.md    ← サブエージェント・並列・Workflow・Worktrees
+    ├── automation.md       ← /loop・Routines・headless・Hooks
+    └── tooling.md          ← Plugins・Skills・Memory・Checkpoints・MCP
 ```
 
 ### 活用マッピング
@@ -1221,6 +1249,7 @@ rm -rf "$TEMP/ccqf"
 | UI画面設計・UX改善・コンバージョン最適化 | `ux-psychology/index.md`, `ux-psychology/choice.md` |
 | オンボーディング・リテンション設計 | `ux-psychology/motivation.md`, `ux-psychology/impression.md` |
 | UXリサーチ・A/Bテスト設計のバイアス回避 | `ux-psychology/bias.md` |
+| Claude Code自体で効率化・自動化・定期実行 | `claude-code/index.md`（`/cc-features`） |
 
 関連業務が発生した際に該当ファイルを参照することで、専門知識に基づいた設計判断・レビュー・助言が可能になります。
 
@@ -1389,8 +1418,8 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 3. 各ファイルの先頭行がISO9001の条項番号を含んでいる
 4. 開発プラクティスフォルダに以下の6ファイルが存在する:
    - `~/.claude/knowledge/practices/` — `index.md`, `coding-style.md`, `security.md`, `testing.md`, `git-workflow.md`, `dev-workflow.md`
-5. コマンドフォルダに以下の4ファイルが存在する:
-   - `~/.claude/commands/` — `5s.md`, `knowledge.md`, `quality-review.md`, `risk.md`
+5. コマンドフォルダに以下の5ファイルが存在する:
+   - `~/.claude/commands/` — `5s.md`, `knowledge.md`, `quality-review.md`, `risk.md`, `cc-features.md`
 6. Hookファイルが存在する:
    - `~/.claude/hooks/process-gate.py`
 7. 知識ベースフォルダに以下のファイルが存在する:
@@ -1402,6 +1431,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
    - `~/.claude/knowledge/e-cert/` — 5ファイル（`index.md`, `dl-fundamentals.md`, `dl-architectures.md`, `dl-training.md`, `dl-applications.md`）
    - `~/.claude/knowledge/python3/` — 5ファイル（`index.md`, `core-syntax.md`, `stdlib.md`, `oop.md`, `best-practices.md`）
    - `~/.claude/knowledge/ux-psychology/` — 6ファイル（`index.md`, `information.md`, `choice.md`, `motivation.md`, `impression.md`, `bias.md`）
+   - `~/.claude/knowledge/claude-code/` — 4ファイル（`index.md`, `orchestration.md`, `automation.md`, `tooling.md`）
 8. Apple HIG スキルフォルダに以下のファイルが存在する:
    - `~/.claude/skills/apple-hig-designer/SKILL.md`
    - `~/.claude/skills/apple-hig-designer/REFERENCE.md`
@@ -1424,7 +1454,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 | CLAUDE.md（グローバルルール） | ✅ |
 | 品質管理ファイル（8個） | ✅ |
 | 開発プラクティス（6ファイル） | ✅ |
-| スラッシュコマンド（4ファイル） | ✅ |
+| スラッシュコマンド（5ファイル） | ✅ |
 | Hook（process-gate.py） | ✅ |
 | Apple HIG スキル（6ファイル） | ✅ |
 | 知識ベース — IPA（11ファイル） | ✅ |
@@ -1435,6 +1465,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 | 知識ベース — E資格（5ファイル） | ✅ |
 | 知識ベース — Python3基礎（5ファイル） | ✅ |
 | 知識ベース — UX心理学（6ファイル） | ✅ |
+| 知識ベース — Claude Code 高度機能（4ファイル） | ✅ |
 | ECC（everything-claude-code） | ✅ インストール済 / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 
@@ -1450,10 +1481,10 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 | CLAUDE.md（グローバルルール） | 🔄 更新 / ✅ 変更なし |
 | 品質管理ファイル（8個） | 🔄 N個更新 / ✅ 変更なし |
 | 開発プラクティス（6ファイル） | 🔄 N個更新 / ✅ 変更なし |
-| スラッシュコマンド（4ファイル） | 🔄 N個更新 / ✅ 変更なし |
+| スラッシュコマンド（5ファイル） | 🔄 N個更新 / ✅ 変更なし |
 | Hook（process-gate.py） | 🔄 更新 / ✅ 変更なし |
 | Apple HIG スキル | 🔄 更新 / ✅ 変更なし |
-| 知識ベース（8分野） | 🔄 N分野更新 / ✅ 変更なし |
+| 知識ベース（8分野＋Claude Code運用） | 🔄 N分野更新 / ✅ 変更なし |
 | ECC（everything-claude-code） | 🔄 更新 / ✅ 変更なし / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 

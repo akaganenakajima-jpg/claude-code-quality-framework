@@ -16,6 +16,17 @@ MCPサーバーの前提プログラムはMCPごとに異なります（Node.js 
 | Python | `python3 --version` | https://www.python.org/ からインストール |
 | uv / uvx | `uvx --version` | https://docs.astral.sh/uv/getting-started/installation/ |
 
+## MCP・プラグインの追加方法
+
+MCPサーバーは以下のいずれの方法でも追加できます（環境に応じて選択）:
+
+1. **`/plugin`（マーケットプレイス）**: `/plugin` でマーケットプレイスを開き検索・インストール。`/plugin marketplace add <owner/repo>` で独自マーケットを登録。MCP・スキル・エージェント・Hook をまとめて導入できる。
+2. **`claude mcp add` CLI**: `claude mcp add <name> ...`（リモートは `--transport http <url>`）。プロジェクト/ユーザースコープを選べる。
+3. **設定ファイル**: `~/.claude/.mcp.json`（ユーザー）／ `./.claude/.mcp.json`（プロジェクト）に直接記述。
+4. **デスクトップアプリ**: 設定 → MCP Servers から検索して追加。
+
+以下の各ツールの「追加方法」はデスクトップアプリ手順を記載していますが、上記1〜3でも同様に追加できます。
+
 ## おすすめ
 
 ### Notion MCP

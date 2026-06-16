@@ -150,14 +150,11 @@
 - スマホ表示の確認は `preview_resize preset:mobile` を使う
 
 ## Claude Code 高度機能の活用
+Claude Code 自体の機能（サブエージェント・並列実行・Workflow・`/loop`・Routines・Hooks・Plugins・Memory・Checkpoints 等）で作業を速く・安全に・自動化できる。**詳細カタログと逆引きは `knowledge/claude-code/index.md`**（`/cc-features` でも呼べる）。最新の機能名・挙動は公式ドキュメントで都度確認する。
 
-### Worktrees — 「壊しても大丈夫な別世界」で作業する
-- 大きな変更や実験をする時は、隔離環境（Worktree）を提案する
-- 本番は常に安全な状態を保つ。失敗してもworktreeを消すだけで元通り
-- こう言われたら提案する:
-  - 「試しに〜してみたい」「大幅に変えたい」「壊れても構わないから試して」
-
-### Headless mode — Claudeを自動実行する
-- `env -u CLAUDECODE claude -p "プロンプト"` でスクリプトから呼び出せる
-- こう言われたら提案する:
-  - 「毎日自動でやりたい」「定期実行したい」「APIの結果を自動分析したい」
+こう言われたら該当機能を提案する:
+- 「試しに〜」「大幅に変えたい」「壊れてもいい」→ **Worktrees** で隔離（🔴最高リスク作業の標準）
+- 「毎日自動で」「定期実行したい」「APIの結果を自動分析」→ **Routines/`/schedule`**（クラウド・無人）または headless（`env -u CLAUDECODE claude -p "..."`）
+- 「5分ごとに確認」「見張り続けて」→ **`/loop`**（セッション中の繰り返し）
+- 重い調査が3つ以上で並行可能 → **並列サブエージェント**／数十〜数百ファイルの一括処理 → **Workflow**
+- 編集を巻き戻したい → **`/rewind`（Checkpoints）** ＋ 大改修前は git コミット

@@ -9,10 +9,10 @@
 ```
  判断                    知識                      規律
  ─────                  ─────                    ─────
- タスクを受ける          8分野・58ファイルの        PDCA・リスク判定・
-    ↓                   専門知識を                 5Sで毎回同じ
- 13大分類+8横断で        オンデマンドで             品質を出す
- 課題を自動分析          引き出す
+ タスクを受ける          専門8分野＋運用知識を      PDCA・リスク判定・
+    ↓                   オンデマンドで             5Sで毎回同じ
+ 13大分類+8横断で        引き出す                   品質を出す
+ 課題を自動分析
     ↓                      ↓                        ↓
  CLAUDE.md              knowledge/                quality/
  (~160行・毎回読込)      (必要な§だけ読む)          (省略禁止のゲート)
@@ -29,7 +29,7 @@
 | 柱 | 役割 | 仕組み |
 |---|---|---|
 | **判断** | 何を参照すべきか自分で決める | CLAUDE.md が13大分類+8横断チェックでタスクを分析→知識ファイルへ自動ルーティング |
-| **知識** | 何を知っているか | 8分野58ファイルの専門知識をオンデマンド供給（平均1-2ファイル/タスク） |
+| **知識** | 何を知っているか | 専門8分野（52ファイル）＋Claude Code運用知識をオンデマンド供給（平均1-2ファイル/タスク） |
 | **規律** | どう動くか | ISO 9001準拠のPDCA・リスク判定・5Sで全タスクの品質を統制 |
 | **デザイン** | どう見せるか | Apple HIG をデフォルト適用 + UX心理学43法則で「なぜ効くか」の根拠を提供 |
 
@@ -95,14 +95,14 @@ Claude が自動的に既存ファイルとの差分を検出し、変更があ�
 
 ## 導入されるもの
 
-### 判断・規律（20ファイル）
+### 判断・規律（21ファイル）
 
 | カテゴリ | ファイル数 | 内容 |
 |---|---|---|
 | グローバルルール | 1 | `~/.claude/CLAUDE.md` — タスク分析・自動ルーティング・5S・UIデフォルト設定 |
 | 品質管理 | 8 | `~/.claude/quality/` — PDCA・リスク管理・品質ゲート |
 | 開発プラクティス | 6 | `~/.claude/knowledge/practices/` — TDD・セキュリティ・Git |
-| スラッシュコマンド | 4 | `~/.claude/commands/` — `/5s`, `/knowledge`, `/quality-review`, `/risk` |
+| スラッシュコマンド | 5 | `~/.claude/commands/` — `/5s`, `/knowledge`, `/quality-review`, `/risk`, `/cc-features` |
 | Hook | 1 | `~/.claude/hooks/process-gate.py` — コミット前リスク判定 |
 
 ### Apple HIG デザインスキル（6ファイル）
@@ -119,7 +119,7 @@ UX心理学知識と連携し、「なぜそのデザインが効くか」の心
 | `ui-patterns.md` | UIパターン詳細ドキュメント（シート・アラート・タブバー等） |
 | `LICENSE` | MIT ライセンス（原作: [axiaoge2/apple-hig-designer](https://github.com/axiaoge2/apple-hig-designer)） |
 
-### 知識ベース（8分野・58ファイル）
+### 知識ベース（専門8分野52ファイル ＋ Claude Code運用4ファイル）
 
 | 分野 | ファイル数 | 内容 |
 |---|---|---|
@@ -131,6 +131,7 @@ UX心理学知識と連携し、「なぜそのデザインが効くか」の心
 | E資格 | 5 | 深層学習・CNN/RNN/Transformer・学習技法 |
 | Python3基礎 | 5 | 構文・標準ライブラリ・OOP・ベストプラクティス |
 | UX心理学 | 6 | 43法則（情報設計・選択設計・動機設計・印象設計・認知の罠） |
+| Claude Code運用 | 4 | 高度機能カタログ（オーケストレーション・自動化・周辺ツール）※専門8分野とは別軸 |
 
 ---
 
@@ -148,7 +149,7 @@ knowledge/*/index.md          ← オンデマンド読み込み。シナリオ�
 knowledge/*/detail.md          ← 必要な§セクションだけ読む（平均1-2ファイル）
 ```
 
-CLAUDE.md は約160行のコンパクトな判定エンジン。58ファイルの知識を毎回読み込むのではなく、必要なときに必要な部分だけ参照することで、コンテキスト消費を最小化しています。
+CLAUDE.md は約160行のコンパクトな判定エンジン。全知識を毎回読み込むのではなく、必要なときに必要な部分だけ参照することで、コンテキスト消費を最小化しています。
 
 ### Apple HIG + UX心理学の連携
 
@@ -160,17 +161,17 @@ CLAUDE.md は約160行のコンパクトな判定エンジン。58ファイル�
 | コンテンツ優先のレイアウト | 認知負荷の低減 | `ux-psychology/information.md` §1 |
 | 一貫した視覚言語 | 美的ユーザビリティ効果 | `ux-psychology/impression.md` §1 |
 
-### ECC との共存（自動インストール対応）
+### ECC との共存（インストール選択可）
 
 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) (ECC) と**競合ゼロ**で併用できます。
-**セットアップ時に自動インストール**されます（`npx ecc-install <言語>` — 常に最新版を取得）。
+**セットアップ時にインストールを選択できます**（任意・`npx ecc-install <言語>` — 常に最新版を取得。スキップ可）。
 
 | 領域 | 当フレームワーク | ECC |
 |---|---|---|
 | 対象 | **プロセス品質**（判断/知識/規律/デザイン） | **コード品質**（フォーマット/型/テスト実行） |
 | 格納先 | `~/.claude/CLAUDE.md` + `knowledge/` + `skills/` | `~/.claude/rules/` |
 | Hook | リスク判定リマインダー | lint/type check/test |
-| コマンド | `/5s`, `/knowledge`, `/risk`, `/quality-review` | ECC固有の57コマンド |
+| コマンド | `/5s`, `/knowledge`, `/risk`, `/quality-review`, `/cc-features` | ECC固有の57コマンド |
 | インストール | setup-prompt.md §1〜§4 | setup-prompt.md §5-3（npx） |
 
 ---
@@ -194,7 +195,8 @@ claude-code-quality-framework/
 │   ├── math-strategist/            ← DS数学ストラテジスト上級（5ファイル）
 │   ├── e-cert/                     ← E資格（5ファイル）
 │   ├── python3/                    ← Python3基礎（5ファイル）
-│   └── ux-psychology/              ← UX心理学（6ファイル）
+│   ├── ux-psychology/              ← UX心理学（6ファイル）
+│   └── claude-code/                ← Claude Code 高度機能（運用・4ファイル）
 ├── skills/
 │   └── apple-hig-designer/         ← Apple HIG デザインスキル（デフォルトUIスタイル）
 │       ├── SKILL.md                ← スキル定義・UX心理学連携
@@ -207,7 +209,7 @@ claude-code-quality-framework/
 ├── hooks/
 │   └── process-gate.py             ← コミット前リスク判定リマインダー
 ├── commands/
-│   └── 5s.md, knowledge.md, quality-review.md, risk.md
+│   └── 5s.md, knowledge.md, quality-review.md, risk.md, cc-features.md
 └── examples/
     └── project-claude-md.example   ← プロジェクトCLAUDE.md テンプレート
 ```
