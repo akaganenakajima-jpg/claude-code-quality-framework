@@ -287,6 +287,17 @@ rm -rf "$TEMP/ccqf"
 - `preview_eval` で `return` を使う場合は即時関数 `(function(){ ... return ...; })()` で包む
 - スマホ表示の確認は `preview_resize preset:mobile` を使う
 
+## エージェント運用原則（自律性 × 品質）
+自律的に動くほど速いが、品質ゲートは減らさない。減らすのは「やっていいですか」の往復だけ。詳細と根拠 → `knowledge/claude-code/agentic-operating.md`、モデル・effort の選定 → `knowledge/claude-code/model-routing.md`
+1. **自律の線引き＝リスク判定**: 🟢🟡（新規追加・可逆な修正）は要求から導かれる限り聞かずに進める。🟠🔴・破壊的操作・スコープ変更は確認する（🟠は影響範囲、🔴は Worktree 計画とロールバック手順を提示して合意を得る）。ユーザーが問題を説明・質問しているだけなら評価が成果物 — 報告して止まり、修正は頼まれてから
+2. **情報が揃えば動く**: 確立済みの事実を導き直さない、決定済みを蒸し返さない、採らない選択肢を並べない（ユーザー向けの文章で。思考は別）。迷ったら網羅でなく推奨を出す
+3. **スコープ厳守**: 頼まれた範囲を狭めない・広げない・すり替えない。途中の問いは依存しない部分を先に進めて仮定を明示する。全部やり切ってから完了報告（「困ったときのルール」の停止条件は優先）。担当タスク外の既存バグ・改善案は直さず `tasks/` に記録して申し送る
+4. **証拠ベース報告**: 主張はツール結果で裏付ける。失敗は出力付き、スキップは明言、完了は言い切る。開始時に一行、終了時は結論先出しの自立した要約
+5. **品質ゲートは維持**: PDCA・3層検証・TDD はモデル世代に関係なく実施する。ゲート外に「再確認せよ」を重ねない。長期タスクは自分の検証方法を先に決めて定期的に回す
+6. **委譲**: 独立・並列・大規模なら委譲し（目安は「サブエージェントの使い分け」）、待たずに自分の作業を続ける。2〜3ファイルで済む作業は自分で。委譲結果を再導出しない
+7. **最小変更**: 全体書き換えより外科的編集。要求を超える機能追加・リファクタ・抽象化をしない。スクラッチ検証は残さない
+8. **名前を知っている≠現状を知っている**: モデル・Claude Code 機能・ライブラリなど変化の速い領域は公式で確認してから断定する
+
 ## Claude Code 高度機能の活用
 Claude Code 自体の機能（サブエージェント・並列実行・Workflow・`/loop`・Routines・Hooks・Plugins・Memory・Checkpoints 等）で作業を速く・安全に・自動化できる。**詳細カタログと逆引きは `knowledge/claude-code/index.md`**（`/cc-features` でも呼べる）。最新の機能名・挙動は公式ドキュメントで都度確認する。
 
@@ -781,7 +792,7 @@ CLAUDE.mdから分離した実装ルール群。コードを書く・変える�
 ## 1. 受入（タスクを受けたとき）
 
 - タスクの目的と完了条件を確認する
-- 不明点があれば先に質問する（推測で進めない）
+- 読み方で成果物が大きく変わる不明点は先に質問する。それ以外は仮定を明示して進める（CLAUDE.md エージェント運用原則 3）
 - 関連する知識ファイルを参照する（CLAUDE.md §知識ベース自動参照）
 
 ## 2. 調査（実装前の必須ステップ）
@@ -987,12 +998,12 @@ git diff を分析し、変更のリスクレベルを判定する。
 <content>
 # /cc-features — Claude Code 高度機能の案内
 
-Claude Code 自体の機能（オーケストレーション・自動化・周辺ツール）を、いま手元の課題に合わせて提案する。
+Claude Code 自体の機能と運用（エージェント運用原則・モデル選定と effort・オーケストレーション・自動化・周辺ツール）を、いま手元の課題に合わせて提案する。
 
 ## 手順
 
 1. `~/.claude/knowledge/claude-code/index.md` を Read し、逆引き表から課題に合う機能を特定する。
-2. 必要に応じて該当トピック（`orchestration.md` / `automation.md` / `tooling.md`）を Read して詳細を確認する。
+2. 必要に応じて該当トピック（`agentic-operating.md` / `model-routing.md` / `orchestration.md` / `automation.md` / `tooling.md`）を Read して詳細を確認する。
 3. **記憶に頼らず**、機能名・コマンド名・挙動を公式ドキュメント（`https://code.claude.com/docs`）または `claude-code-guide` エージェントで裏取りしてから案内する。
 4. 「どの機能を・なぜ・どう呼び出すか」を、現在の作業文脈に紐づけて具体的に提示する。
 
@@ -1213,8 +1224,10 @@ rm -rf "$TEMP/ccqf"
 │   ├── motivation.md       ← 動機設計（目標勾配・変動報酬・ゲーミフィケーション）
 │   ├── impression.md       ← 印象設計（美的ユーザビリティ・社会的証明・ピークエンド）
 │   └── bias.md             ← 認知の罠（確証バイアス・共感ギャップ・ホーソン効果）
-└── claude-code/            ← Claude Code 高度機能（運用・4ファイル）
+└── claude-code/            ← Claude Code 高度機能・運用（6ファイル）
     ├── index.md            ← 機能逆引き・最終検証日
+    ├── agentic-operating.md ← エージェント運用原則・世代反転の記録・再監査手順
+    ├── model-routing.md    ← モデル選定・effort・エイリアス・フォールバック
     ├── orchestration.md    ← サブエージェント・並列・Workflow・Worktrees
     ├── automation.md       ← /loop・Routines・headless・Hooks
     └── tooling.md          ← Plugins・Skills・Memory・Checkpoints・MCP
@@ -1431,7 +1444,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
    - `~/.claude/knowledge/e-cert/` — 5ファイル（`index.md`, `dl-fundamentals.md`, `dl-architectures.md`, `dl-training.md`, `dl-applications.md`）
    - `~/.claude/knowledge/python3/` — 5ファイル（`index.md`, `core-syntax.md`, `stdlib.md`, `oop.md`, `best-practices.md`）
    - `~/.claude/knowledge/ux-psychology/` — 6ファイル（`index.md`, `information.md`, `choice.md`, `motivation.md`, `impression.md`, `bias.md`）
-   - `~/.claude/knowledge/claude-code/` — 4ファイル（`index.md`, `orchestration.md`, `automation.md`, `tooling.md`）
+   - `~/.claude/knowledge/claude-code/` — 6ファイル（`index.md`, `agentic-operating.md`, `model-routing.md`, `orchestration.md`, `automation.md`, `tooling.md`）
 8. Apple HIG スキルフォルダに以下のファイルが存在する:
    - `~/.claude/skills/apple-hig-designer/SKILL.md`
    - `~/.claude/skills/apple-hig-designer/REFERENCE.md`
@@ -1465,7 +1478,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 | 知識ベース — E資格（5ファイル） | ✅ |
 | 知識ベース — Python3基礎（5ファイル） | ✅ |
 | 知識ベース — UX心理学（6ファイル） | ✅ |
-| 知識ベース — Claude Code 高度機能（4ファイル） | ✅ |
+| 知識ベース — Claude Code 高度機能・運用（6ファイル） | ✅ |
 | ECC（everything-claude-code） | ✅ インストール済 / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 

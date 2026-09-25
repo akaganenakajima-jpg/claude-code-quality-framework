@@ -7,7 +7,7 @@ Claude Code 向け ISO 9001:2015 準拠の品質管理フレームワーク配�
 ## 設計原則
 1. **貼り付けで導入**: process系（CLAUDE.md・quality・practices・commands・hooks）は setup-prompt.md 内の `<content>` タグにインライン展開し、貼り付けだけで導入できる。knowledge/ と skills/ は容量が大きいため §4 で git clone + cp により導入する
 2. **ECC競合ゼロ**: `~/.claude/CLAUDE.md` + `knowledge/` を使用（ECCの `~/.claude/rules/` と別空間）
-3. **オンデマンド読込**: CLAUDE.md は判定・トリガーのみ（~160行）。実装ルールは `knowledge/practices/` にオンデマンド参照
+3. **オンデマンド読込**: CLAUDE.md は判定・トリガーのみ（~170行）。実装ルールは `knowledge/practices/` にオンデマンド参照
 
 ## ファイル編集ルール
 

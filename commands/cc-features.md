@@ -1,11 +1,11 @@
 # /cc-features — Claude Code 高度機能の案内
 
-Claude Code 自体の機能（オーケストレーション・自動化・周辺ツール）を、いま手元の課題に合わせて提案する。
+Claude Code 自体の機能と運用（エージェント運用原則・モデル選定と effort・オーケストレーション・自動化・周辺ツール）を、いま手元の課題に合わせて提案する。
 
 ## 手順
 
 1. `~/.claude/knowledge/claude-code/index.md` を Read し、逆引き表から課題に合う機能を特定する。
-2. 必要に応じて該当トピック（`orchestration.md` / `automation.md` / `tooling.md`）を Read して詳細を確認する。
+2. 必要に応じて該当トピック（`agentic-operating.md` / `model-routing.md` / `orchestration.md` / `automation.md` / `tooling.md`）を Read して詳細を確認する。
 3. **記憶に頼らず**、機能名・コマンド名・挙動を公式ドキュメント（`https://code.claude.com/docs`）または `claude-code-guide` エージェントで裏取りしてから案内する。
 4. 「どの機能を・なぜ・どう呼び出すか」を、現在の作業文脈に紐づけて具体的に提示する。
 
