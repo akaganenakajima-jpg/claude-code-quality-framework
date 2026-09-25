@@ -30,7 +30,7 @@
 |---|---|---|
 | **判断** | 何を参照すべきか自分で決める | CLAUDE.md が13大分類+8横断チェックでタスクを分析→知識ファイルへ自動ルーティング |
 | **知識** | 何を知っているか | 専門8分野（52ファイル）＋Claude Code運用知識をオンデマンド供給（平均1-2ファイル/タスク） |
-| **規律** | どう動くか | ISO 9001準拠のPDCA・リスク判定・5Sで全タスクの品質を統制 |
+| **規律** | どう動くか | ISO 9001準拠のPDCA・リスク判定・5Sで全タスクの品質を統制。エージェント運用原則で「聞かずに進める範囲」をリスク判定に接続 |
 | **デザイン** | どう見せるか | Apple HIG をデフォルト適用 + UX心理学43法則で「なぜ効くか」の根拠を提供 |
 
 ## セットアップ
@@ -119,7 +119,7 @@ UX心理学知識と連携し、「なぜそのデザインが効くか」の心
 | `ui-patterns.md` | UIパターン詳細ドキュメント（シート・アラート・タブバー等） |
 | `LICENSE` | MIT ライセンス（原作: [axiaoge2/apple-hig-designer](https://github.com/axiaoge2/apple-hig-designer)） |
 
-### 知識ベース（専門8分野52ファイル ＋ Claude Code運用4ファイル）
+### 知識ベース（専門8分野52ファイル ＋ Claude Code運用6ファイル）
 
 | 分野 | ファイル数 | 内容 |
 |---|---|---|
@@ -131,7 +131,7 @@ UX心理学知識と連携し、「なぜそのデザインが効くか」の心
 | E資格 | 5 | 深層学習・CNN/RNN/Transformer・学習技法 |
 | Python3基礎 | 5 | 構文・標準ライブラリ・OOP・ベストプラクティス |
 | UX心理学 | 6 | 43法則（情報設計・選択設計・動機設計・印象設計・認知の罠） |
-| Claude Code運用 | 4 | 高度機能カタログ（オーケストレーション・自動化・周辺ツール）※専門8分野とは別軸 |
+| Claude Code運用 | 6 | エージェント運用原則・モデル選定と effort・高度機能カタログ（オーケストレーション・自動化・周辺ツール）※専門8分野とは別軸 |
 
 ---
 
@@ -165,6 +165,7 @@ CLAUDE.md は約160行のコンパクトな判定エンジン。全知識を毎�
 
 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) (ECC) と**競合ゼロ**で併用できます。
 **セットアップ時にインストールを選択できます**（任意・`npx ecc-install <言語>` — 常に最新版を取得。スキップ可）。
+> 注: ECC 側の `rules/common/performance.md` はモデル世代が古い場合があります。モデル選定・effort は本フレームワークの `knowledge/claude-code/model-routing.md` を正本にしてください。
 
 | 領域 | 当フレームワーク | ECC |
 |---|---|---|
@@ -196,7 +197,7 @@ claude-code-quality-framework/
 │   ├── e-cert/                     ← E資格（5ファイル）
 │   ├── python3/                    ← Python3基礎（5ファイル）
 │   ├── ux-psychology/              ← UX心理学（6ファイル）
-│   └── claude-code/                ← Claude Code 高度機能（運用・4ファイル）
+│   └── claude-code/                ← Claude Code 高度機能（運用・6ファイル）
 ├── skills/
 │   └── apple-hig-designer/         ← Apple HIG デザインスキル（デフォルトUIスタイル）
 │       ├── SKILL.md                ← スキル定義・UX心理学連携
