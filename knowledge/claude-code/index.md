@@ -50,7 +50,7 @@ Claude Code 自体の機能を使って作業を「速く・安全に・自動�
 
 - **自律の線引き = リスク判定**: 🟢🟡 は聞かずに進め、🟠🔴・破壊的操作・スコープ変更は確認（`quality/risks.md` と `agentic-operating.md` §1）。
 - **自律化 ≠ 検証削減**: PDCA・3 層検証・TDD は維持。ゲート外の冗長な再確認だけ足さない（`agentic-operating.md` §0, §5）。
-- **申し送り**: 作業中に見つけた既存バグ・改善案は直さず `tasks/` へ（`quality/nonconformity.md` の横展開と接続）。
+- **申し送り**: 作業中に見つけた担当タスク外の既存バグ・改善案は直さず `tasks/` に記録して申し送る（`quality/nonconformity.md` 手順2「記録」。担当タスク内で発生した不適合は同ファイルの是正プロセスに従う）。
 - 🔴 最高リスク作業（DB 構造変更・定期実行変更・本番公開）→ **Worktrees** で隔離、モデルは `best`（`model-routing.md` §3）。
 - 大改修の前に「戻れる状態」を確保 → **Checkpoints** + git コミット（`practices/git-workflow.md` §3）。
 - 調べることが 3 つ以上で並行可能 → **並列サブエージェント**、待たずに自分の作業を続ける。

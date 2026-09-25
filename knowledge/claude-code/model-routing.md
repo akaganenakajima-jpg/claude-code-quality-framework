@@ -52,7 +52,7 @@ Claude Code の既定（公式 model-config）: **effort 対応モデルは全�
 - 上位モデルは「難しいから」ではなく「**判断を誤ると手戻りが大きいから**」使う。ただし §2 のとおり、Opus 5.5 medium が Sonnet 5 high より安く済む場面もある。迷ったら「上位 × 低 effort」を一度測る。
 - 計画だけ上位で足りるなら `opusplan`（Plan モード中は `opus`、実行時は `sonnet` に自動切替）。長文脈は `sonnet[1m]` / `opus[1m]`（Sonnet 5 はネイティブ 1M のため効果なし）。
 - **Fast mode**（`/fast`、settings `fastMode`）: Opus 系のみ（公式移行ガイドでは Opus 5 / 5.5 / 4.8、Claude API 経由のみ）。同じモデルを最大 2.5 倍の出力速度で回す代わりに料金 2 倍（5.5 は $8 / $40 とされるが要確認）。反復的なペアプロ・ライブデバッグ向け。
-- サブエージェントのモデル解決順位: 呼び出し時指定 > agent 定義（`~/.claude/agents/*.md`）の `model:` > 環境変数 `CLAUDE_CODE_SUBAGENT_MODEL` > 親会話のモデル。ただし定義が `model: inherit` の場合は「定義の指定」として扱われ、環境変数より親のモデルが勝つ。サブエージェントには原則 `sonnet` / `haiku` と低〜中 effort を割り当て、統合判断だけ親が担う。
+- サブエージェントのモデル解決順位: 呼び出し時指定 > agent 定義（`~/.claude/agents/*.md`）の `model:` > 環境変数 `CLAUDE_CODE_SUBAGENT_MODEL` > 親会話のモデル。ただし定義が `model: inherit` の場合は「定義の指定」として扱われ、環境変数より親のモデルが勝つ。サブエージェントには原則 `sonnet` / `haiku` と低〜中 effort を割り当て、統合判断だけ親が担う（§2「上位 × 低 effort」の例外。委譲先は範囲が限定されるため）。
 
 ## 4. 上位モデルが使えないとき — 原因で対処を分ける
 
