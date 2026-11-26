@@ -16,7 +16,7 @@
 | v2.1.321 | Fable 5.2 が入り、`fable` が Fable 5.2 を指す。`best` は `opus` と同じに解決するようになった | model-config『Version history』 |
 
 - Desktop アプリが動かす Claude Code と、ターミナルの PATH 上の `claude` は、版が別になることがある。
-- PATH 上の CLI が v2.1.321 より前だと、同じ PC でも旧挙動になる（`best` が Fable を指す、別モデルのサブエージェントが親の effort を引き継ぐ、Fable 5.2 を選べない）。
+- PATH 上の CLI が v2.1.321 より前だと、同じ PC でも旧挙動になる（`best` が Fable を指す、Fable 5.2 を選べない）。v2.1.317 より前だと、別モデルのサブエージェントが親の effort を引き継ぐ。
 - `claude --version` で確かめ、古ければ `claude update` で上げる（実行は利用者の了承を得てから）。
 
 ## 1. 現行モデル（Anthropic API）
@@ -59,18 +59,18 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
 - 公式の試験では、高い effort ほど境界ケースを多く試し、答える前の検証が増え、自分で決める選択も増えた。低い effort では、たたき台が早く返る（同節）。
 - effort を上げると、境界ケースの見落としは減る。取り組み方の誤りは直らない（ブログ「Spending your effort」）。
 - 段の幅はモデルごとに違い、同じ名前でも中身は同じではない。モデルを替えたら、前の設定を持ち越さずに測り直す。
-- Sonnet 5.5 は low で、Haiku 5.5 は low と medium で、コードの変更を確かめずに「完了」と報告することがある（移行ガイド『Verification on coding tasks』）。コードを変える委譲に low を使わない。
+- Sonnet 5.5 は low で、Haiku 5.5 は low と medium で、コードの変更を確かめずに「完了」と報告することがある（移行ガイド『Verification on coding tasks』）。結果を自動で確かめる手段（テストなど）が無いかぎり、コードを変える委譲に low を使わない（確かめられる場合は下の「全件を low で回し、失敗した分だけ high」）。
 
 ### effort を上げるか、モデルを上げるか
 
 | 結果の悪さ | 打ち手 | 出典 |
 |---|---|---|
-| ファイルを読み飛ばした・テストを回さなかった・境界ケースを落とした | effort を1段上げる | ブログ「Choosing a Claude model and effort level in Claude Code」 |
+| ファイルを読み飛ばした・テストを回さなかった・境界ケースを落とした | effort を1段上げる | ブログ「Choosing a Claude model and effort level in Claude Code」（境界ケースは同ブログ『Spending your effort』） |
 | 文脈はそろい、きちんと取り組んだのに誤った | モデルを1段上げる | 同上 |
 | 量が多く、判断が要らない | モデルを下げる | which-claude-model『Pick a model by task』 |
-| high より上が欲しくなった | 先に1つ上のモデルを低い effort で試す。high を超えると、1段上のモデル並みの費用になりうる（例: Fable 5.2 の high は Opus 5.5 の max とほぼ同点で、費用は約半分） | which-claude-model『TL;DR』『Capability and cost per finished task』 |
+| high より上が欲しくなった | 先に1つ上のモデルを低い effort で試す（opus から fable へ上げるのは利用者の了承を得てから。プランによっては従量課金）。high を超えると、1段上のモデル並みの費用になりうる（例: Fable 5.2 の high は Opus 5.5 の max とほぼ同点で、費用は約半分） | which-claude-model『TL;DR』『Capability and cost per finished task』 |
 
-- 足りないときの順番（which-claude-model『Latency against accuracy』）: ①自分の仕事を確かめる手段（テスト・ビルド・呼び出し確認のスクリプト）があるか確かめる → ②effort を1段上げる → ③1つ上のモデルへ。下のモデルで使ったより低い effort から始める。
+- 足りないときの順番（which-claude-model『Latency against accuracy』）: ①自分の仕事を確かめる手段（テスト・ビルド・呼び出し確認のスクリプト）があるか確かめる → ②effort を1段上げる → ③1つ上のモデルへ（opus から fable へは利用者の了承を得てから）。下のモデルで使ったより低い effort から始める。
 - **結果を自動で確かめられるなら**、全件を low で回し、失敗した分だけ high で再実行する。同ブログの例では、Opus 5.5 でこのやり方が合格率約97%・1件約$0.17 となり、全件 high（95.3%・約$0.29）を上回った。
 
 ### 「指定しない」の定義
@@ -103,10 +103,11 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
 | 範囲の明確な実装・文書作成・調査のまとめ（🟢🟡） | D・C | sonnet | 指定しない | 範囲が明確な日常作業は Sonnet 5.5 に下げる。medium は範囲が明確な日常のエンジニアリング向け。仕様が明確でも、移行や性能改善のように難しい作業は opus にする | which-claude-model『TL;DR』『Pick a model by task』、model-config『Choose an effort level』 |
 | レビュー・テスト結果の検証（🟡） | Q | sonnet | high | 結果は、読む量と検証の量で決まる。別モデルのサブエージェントは指定しないと medium で動くので、high を明示する | model-config『Choose an effort level』、sub-agents『When a subagent has no effort field or parameter』 |
 | 設計判断・原因不明のバグ・セキュリティ/権限/DB のレビュー（🟠） | Q | opus | high | 見落としの手戻りが大きい。知識の上限はモデルで、丁寧さは effort で上げる | which-claude-model『TL;DR』、model-config『Choose an effort level』 |
-| 最難関・長時間（🔴。合意を得るときに Fable を使うことも伝える） | Q 最優先 | fable | 指定しない（結果の品質が足りなければ high で再実行） | 公式は、大規模なリファクタ・移行、アーキテクチャ計画、多数のサブエージェントの指揮に、Fable 5.2 を medium から（次に high）勧める。プランによっては従量課金になるので、合意のときに伝える | which-claude-model『Pick a model by task』、model-config『Fable and usage credits』 |
+| 最難関・長時間（🔴。合意を得るときに、Fable を使うこと（プランによっては従量課金）も伝える） | Q 最優先 | fable | 指定しない（結果の品質が足りなければ high で再実行） | 公式は、大規模なリファクタ・移行、アーキテクチャ計画、多数のサブエージェントの指揮に、Fable 5.2 を medium から（次に high）勧める。プランによっては従量課金になるので、合意のときに伝える | which-claude-model『Pick a model by task』、model-config『Fable and usage credits』 |
 
 ### 表の適用範囲と前提
 
+- 行は、親のタスクではなく、委譲する作業そのものの難易度とリスクで選ぶ。
 - model 列が効くのは、定義に `model` が無いエージェント（汎用のサブエージェントなど）だけ。定義に `model` があるエージェントは、定義が正（下の解決順②）。
 - inherit（model を渡さない）に頼らない。親が fable だと、定義の無い委譲先は全部 Fable で動く。
 - 親が Fable のとき Opus に下がるのは、組み込みの Explore だけ（sub-agents『Built-in subagents』。サブスクリプション・Console・`ANTHROPIC_BASE_URL` のゲートウェイのとき。Bedrock などでは Fable のまま）。
@@ -136,7 +137,7 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
 | model | ①呼び出し時の `model` → ②定義の `model`（`inherit` を含む）→ ③`CLAUDE_CODE_SUBAGENT_MODEL` → ④親のモデル（入れ子なら、起動元のサブエージェントのモデル） | sub-agents『Choose a model』 |
 | effort | `CLAUDE_CODE_EFFORT_LEVEL` がすべてに優先する。その下で ①呼び出し時の `effort` → ②定義の `effort` → ③起動元のサブエージェント・スキルの effort → ④`CLAUDE_CODE_SUBAGENT_EFFORT` → ⑤親と同じモデルならセッションの effort、別モデルならそのモデルの保存値・既定値 | sub-agents『Choose an effort level』『When a subagent has no effort field or parameter』 |
 
-- `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` を設定すると、定義の model も呼び出し時の model も無視され、全サブエージェントが1つのモデルで動く（sub-agents『Run every subagent on one model』）。
+- `CLAUDE_CODE_SUBAGENT_MODEL` にモデルを入れ、`CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` を併せて設定すると（v2.1.257 以降）、定義の model も呼び出し時の model も無視され、fork などを除く全サブエージェントがそのモデルで動く（sub-agents『Run every subagent on one model』）。
 - fork（会話の分岐）には、呼び出し時の model・effort が効かない（Agent ツールの説明文）。
 - 実際に動いたモデルと effort は、`/tasks` で確かめられる（sub-agents『Check a subagent's model』）。
 
@@ -144,7 +145,7 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
 
 - 汎用のサブエージェントには、表の model と effort を Agent ツールの引数で渡す。
 - エージェント定義に書かれた項目は、呼び出し時に渡さない（定義が正）。定義に無い項目は、表に従って渡す。例: model だけ定義されたレビュー系には `effort: high` を渡す。
-- 例外: 🔴の作業では、定義に model があっても、呼び出し時に `model: fable` を渡す（呼び出し時の指定は定義より優先する）。
+- 例外: 委譲する作業そのものが🔴に当たるときは、定義に model があっても、呼び出し時に `model: fable` を渡す（呼び出し時の指定は定義より優先する）。
 - Agent ツールの `model` は、エイリアス（`sonnet`・`opus`・`haiku`・`fable`）だけを受け付ける。完全な ID や `inherit` は渡せない。
 - Agent ツールの `effort`（v2.1.292 以降）は、**利用者か、CLAUDE.md・スキルなどの指示が特定の effort を明示したときだけ**使う。Claude 自身の判断では使わない。
   - 根拠は、ランタイムの Agent ツールの説明文（v2.1.331 で 2026-11-27 に確認）。公式ドキュメント（sub-agents『Choose an effort level』）は「利用者が特定の effort を頼んだとき」とだけ書き、CLAUDE.md の指示が根拠になることは明記していない。
@@ -164,19 +165,19 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
 
 | 役割 | model | effort | 補足 |
 |---|---|---|---|
-| 探索・要約（読むだけ） | haiku | 書かない | 名前を `Explore` にすると、組み込みの Explore を置き換えられる（組み込みは親のモデルで動く） |
+| 探索・要約（読むだけ） | haiku | 書かない | 名前を `Explore` にすると、組み込みの Explore を置き換えられる（組み込みは親のモデルで動く。親が Fable のときの扱いは「表の適用範囲と前提」） |
 | レビュー・検証 | sonnet | high | |
 | セキュリティ・DB のレビュー | opus | high | |
-| 設計 | opus | 書かない | 🔴のときだけ、呼び出し時に `model: fable` を渡す |
+| 設計 | opus | 書かない | 🔴のときだけ、呼び出し時に `model: fable` を渡す。effort を書かないのは、🟠では呼び出し時に `effort: high` を渡し、🔴では `model: fable` だけを渡して表どおり effort なしで動かすため |
 
-- frontmatter に `fable` を書かない。書くと、呼ばれるたびに確認なしで Fable で動く（プランによっては従量課金）。
+- frontmatter に `fable` を書かない。書くと、呼ばれるたびに利用者の了承を挟まず Fable が選ばれる（プランによっては従量課金。サブエージェントでの課金同意の扱いは §5 のとおり未確認）。
 - ECC などの配布物を入れ直すと、書き換えた frontmatter が上書きされるおそれがある（§5）。入れ直したら、この表と突き合わせる。
 - `omitClaudeMd: true`（v2.1.271 以降）は、読むだけの検索・要約用エージェントに限って任意で使う。外すと、CLAUDE.md の安全規則（承認の境界・秘密情報の扱い・言語の指定・この表）も委譲先に届かない（sub-agents『Frontmatter reference』）。組み込みの Explore・Plan は、もともと CLAUDE.md を読まない。
 
 ### セッション単位の変更と無人実行
 
 - `/model`・`/effort`・Desktop のセッション管理ツール（`set_session_model`・`set_session_effort`・`set_session_fast_mode`）・fast mode（`/fast`）は、セッション全体と、モデルを指定しない委譲先に効く。**利用者が頼んだときだけ**変える。bypass などの許可モードでは確認画面が出ないので、規則として守る。
-- 無人実行（`-p`・Routines・Workflow）で fable を使うのは、利用者が明示したときだけ。`-p` では、同意なしに usage credits に課金される（model-config『Fable and usage credits』）。
+- 無人実行（`-p`・Routines・Workflow）で fable を指定するのは、利用者が fable を明示したときだけ。明示が無ければ🔴の行も opus で動かし、そのことを結果に書く。`-p` では、Fable が usage credits 払いになるプラン・席の場合、同意を求めずに課金される（model-config『Fable and usage credits』）。
 
 ## 4. 上位モデルが使えないとき — 原因で対処を分ける
 
@@ -191,7 +192,7 @@ effort は、思考の深さ・ツール呼び出しの量・自己検証の量�
    - 上限に当たった事実を利用者に報告する（黙って下位モデルで続けない）
    - 一段下（fable → opus → sonnet → haiku）を明示して再実行する
    - 下げた事実と、精度が落ちうる箇所を成果物に書く（`quality/nonconformity.md`）
-   - 🔴の作業は下位モデルで代替しない。回復を待つか、利用者に判断を仰ぐ
+   - 🔴の作業は下位モデルで代替しない。回復を待つか、利用者に判断を仰ぐ（無人実行で fable の明示が無いときに opus で動かすのは §3 の規則による選択で、この代替には当たらない）
 3. **安全分類器による拒否** → 内容による自動フォールバック（model-config『Automatic model fallback』）。
    - Fable・Opus 5.5・Sonnet 5.5・Opus 5 には分類器があり、主にサイバーセキュリティと生物学の内容で反応する。
    - Fable と Opus 5.5 は、生物学なら Opus 5、サイバーなら旧世代の Opus で再実行する。Sonnet 5.5 は、サイバーなら Sonnet 5 で再実行し、生物学は拒否で終わる。

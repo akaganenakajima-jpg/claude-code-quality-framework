@@ -10,7 +10,7 @@
 | マシンOFFでも実行 | ✗ | ✗ | ✓ |
 | セッション起動が必要 | ✓ | ✗ | ✗ |
 | ローカルファイルアクセス | ✓ | ✓ | ✗（クラウドで都度clone） |
-| 最小間隔 | 1分 | 1分 | 1時間 |
+| 最小間隔 | 1分 | 1分（Claude に頼んで設定する場合。フォームからは1時間） | 1時間 |
 | GitHub/API トリガー | ✗ | ✗ | ✓ |
 
 ## 1. `/loop` — セッション中の繰り返し
@@ -43,7 +43,7 @@ Anthropic のクラウドで、マシンが OFF でも保存済み設定（プ�
 
 ## 4. Desktop スケジュールタスク — ローカル定期実行
 
-デスクトップアプリでローカル実行する定期/単発タスク。セッションを開いておく必要がなく、ローカルファイルに直接アクセスできる。最小間隔1分。`/schedule` で「ローカル」を選ぶか Routines UI から作成。
+デスクトップアプリでローカル実行する定期/単発タスク。セッションを開いておく必要がなく、ローカルファイルに直接アクセスできる。最小間隔は、Claude に頼んで設定すると1分、フォームからは1時間。`/schedule` で「ローカル」を選ぶか Routines UI から作成。
 
 - 出典: https://code.claude.com/docs/en/desktop-scheduled-tasks
 
@@ -53,7 +53,7 @@ TTY なしの単発実行。`claude -p "プロンプト"` でプロンプトを�
 
 - **いつ使うか**: GitHub Actions・pre-commit・シェルスクリプトからの自動実行、API結果の自動分析。
 - **セッション内から呼ぶとき**: `CLAUDECODE=1` が設定された環境（Claude Code の Bash ツールなど）からでも `claude -p` はそのまま動く（v2.1.331 で確認。以前の `env -u CLAUDECODE` による回避は不要）。入れ子で起動したかどうかは `CLAUDE_CODE_CHILD_SESSION` で判別できる（公式 env-vars）。
-- **ユーザー設定を切り離して試すとき**: `--setting-sources project,local` でユーザー設定（フック・プラグイン）を外し、`--settings '{"claudeMdExcludes":[...]}'` でユーザー側の CLAUDE.md・rules を外す。読み込まれたかは、プロジェクト CLAUDE.md に合言葉を書いて答えさせると確かめやすい。
+- **ユーザー設定を切り離して試すとき**: `--setting-sources project,local` でユーザー設定（フック・プラグイン）を外し、`--settings '{"claudeMdExcludes":[...]}'` でユーザー側の CLAUDE.md・rules を外す。読み込まれたかは、プロジェクト CLAUDE.md に合言葉を書いて答えさせると確かめやすい。ユーザー設定の許可ルール（deny・ask）と安全用のフックも外れるので、CLAUDE.md の読み込みを確かめる検証だけに使い、読むだけの依頼にとどめる（副作用のある作業や bypass と組み合わせない）。
 - 出典: https://code.claude.com/docs/en/github-actions
 
 ## 6. Hooks — イベント駆動の決定論的フック
