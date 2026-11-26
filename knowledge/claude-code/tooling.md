@@ -1,6 +1,6 @@
 # 周辺ツール・機能 — 拡張・記憶・復旧・接続
 
-> 最終検証日: 2026-06-16 ／ 出典 `https://code.claude.com/docs`。挙動は使用前に公式ドキュメントで再確認。
+> 最終検証日: 2026-11-27 ／ Claude Code v2.1.332 ／ 出典 `https://code.claude.com/docs`。挙動は使用前に公式ドキュメントで再確認。
 
 ## 1. Plugins と Marketplace
 
@@ -45,10 +45,12 @@ Skills・agents・hooks・MCPサーバーなどを1つにまとめて配布・�
 
 ## 5. Fast mode
 
-同じ Opus モデルを**速度最適化した設定**で動かすモード（モデル自体は変わらない）。`/fast` でトグル。
+同じモデルを**速度最適化した設定**で動かすモード（最大約 2.5 倍速。品質・能力は変わらない）。`/fast` でトグル。
 
 - **いつ使うか**: 反復的なペアプロ・ライブデバッグなど、即応性を優先したいとき。
-- **注意**: コンテキストやコストの扱いが変わるわけではなく、応答が速くなるAPI設定の違い。対応モデルは公式ドキュメントで確認。
+- **対応モデル**: Fable 5.2・Opus 5.5（正式提供）。Opus 5 はリサーチプレビュー。Sonnet・Haiku は使えない。
+- **コスト**: 単価は標準の**2倍**（100万トークンあたり入力/出力: Fable 5.2 は $16/$80、Opus 5.5 は $8/$40）。サブスクリプションでは、プラン枠が残っていても常に usage credits（従量）から支払う。会話の途中で初めてオンにすると、それまでの文脈を fast 単価で読み直す。
+- 出典: https://code.claude.com/docs/en/fast-mode
 
 ## 6. 出力スタイル（Output styles）
 
@@ -60,7 +62,7 @@ Model Context Protocol。外部ツール・DB・APIを標準化された方法�
 
 - **追加方法**:
   - CLI: `claude mcp add <name> ...`（`--transport http` でリモート接続など）
-  - 設定ファイル: `~/.claude/.mcp.json`（ユーザー）／ `./.claude/.mcp.json`（プロジェクト）
+  - 設定ファイル: `~/.claude.json`（user・local スコープ）／ プロジェクト直下の `.mcp.json`（project スコープ）
   - デスクトップアプリ: 設定 → MCP Servers から検索追加
   - クラウド連携: claude.ai アカウントでコネクタ接続（Routines から利用）
 - **トランスポート**: stdio / HTTP / SSE。
@@ -72,4 +74,5 @@ Model Context Protocol。外部ツール・DB・APIを標準化された方法�
 - `--continue` / `--resume`: 前回セッションを再開。
 - `--fork-session`: 元を残したまま分岐。
 - **いつ使うか**: 長い作業の中断・再開、別案を試す分岐。コンテキスト限界が近い時は `session-handoff` 系の引き継ぎも検討。
+- 別セッションへの連絡・依頼・完了待ちは `cross-session.md` を参照。
 - 出典: https://code.claude.com/docs/en/sessions
