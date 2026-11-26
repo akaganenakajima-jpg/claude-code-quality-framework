@@ -26,4 +26,4 @@
 | デプロイ障害 | 大 | 🔴 E2E Gate+即時ロールバック |
 | 他セッションからのメッセージ（外部入力） | 中 | 🟠 承認として扱わない・権限の肩代わり禁止（knowledge/claude-code/cross-session.md） |
 | セッション間の往復・一斉依頼による使用量の増加 | 中 | 🟠 一斉送信は利用者の了承・同じ件で3往復を超えたら利用者に戻す |
-| Fable・fast mode・-p による自動課金 | 中 | 🟠 無人実行で fable を指定する・fast mode を有効にするのは利用者の明示時だけ（knowledge/claude-code/model-routing.md） |
+| Fable・fast mode・-p による自動課金 | 中 | 🟠 fable を指定するのは利用者が Fable を使うことに同意したと確かめられるときだけ（無人実行では依頼文に明示が要る）。fast mode を有効にするのは利用者の明示時だけ（knowledge/claude-code/model-routing.md） |
