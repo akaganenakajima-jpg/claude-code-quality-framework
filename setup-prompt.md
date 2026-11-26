@@ -1249,11 +1249,12 @@ rm -rf "$TEMP/ccqf"
 │   ├── motivation.md       ← 動機設計（目標勾配・変動報酬・ゲーミフィケーション）
 │   ├── impression.md       ← 印象設計（美的ユーザビリティ・社会的証明・ピークエンド）
 │   └── bias.md             ← 認知の罠（確証バイアス・共感ギャップ・ホーソン効果）
-└── claude-code/            ← Claude Code 高度機能・運用（6ファイル）
+└── claude-code/            ← Claude Code 高度機能・運用（7ファイル）
     ├── index.md            ← 機能逆引き・最終検証日
     ├── agentic-operating.md ← エージェント運用原則・世代反転の記録・再監査手順
-    ├── model-routing.md    ← モデル選定・effort・エイリアス・フォールバック
+    ├── model-routing.md    ← 難易度・QCD によるモデル/effort 選定・解決順・フォールバック
     ├── orchestration.md    ← サブエージェント・並列・Workflow・Worktrees
+    ├── cross-session.md    ← セッション間のやりとり（使いどころ・受ける側/送る側・承認の境界）
     ├── automation.md       ← /loop・Routines・headless・Hooks
     └── tooling.md          ← Plugins・Skills・Memory・Checkpoints・MCP
 ```
@@ -1288,6 +1289,7 @@ rm -rf "$TEMP/ccqf"
 | オンボーディング・リテンション設計 | `ux-psychology/motivation.md`, `ux-psychology/impression.md` |
 | UXリサーチ・A/Bテスト設計のバイアス回避 | `ux-psychology/bias.md` |
 | Claude Code自体で効率化・自動化・定期実行 | `claude-code/index.md`（`/cc-features`） |
+| サブエージェントのモデル・effort 選定、別セッションとの連絡 | `claude-code/model-routing.md`, `claude-code/cross-session.md` |
 
 関連業務が発生した際に該当ファイルを参照することで、専門知識に基づいた設計判断・レビュー・助言が可能になります。
 
@@ -1390,7 +1392,7 @@ MCPサーバーを追加すると、Claude Codeの機能を拡張できます。
 ### 5-3. Everything Claude Code (ECC) のインストール
 
 [everything-claude-code](https://github.com/affaan-m/everything-claude-code) は、コード品質（フォーマット・型・テスト実行）に特化した Claude Code 拡張パッケージです。
-当フレームワーク（プロセス品質）と **競合ゼロ** で併用できます。
+当フレームワーク（プロセス品質）と併用できます（格納先は別。ただし ECC の `~/.claude/rules/` も毎回読み込まれるため、モデル・effort の選定は当フレームワークの CLAUDE.md「サブエージェントの使い分け」と `model-routing.md` を正本にします）。
 
 | 項目 | 当フレームワーク | ECC |
 |---|---|---|
@@ -1469,7 +1471,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
    - `~/.claude/knowledge/e-cert/` — 5ファイル（`index.md`, `dl-fundamentals.md`, `dl-architectures.md`, `dl-training.md`, `dl-applications.md`）
    - `~/.claude/knowledge/python3/` — 5ファイル（`index.md`, `core-syntax.md`, `stdlib.md`, `oop.md`, `best-practices.md`）
    - `~/.claude/knowledge/ux-psychology/` — 6ファイル（`index.md`, `information.md`, `choice.md`, `motivation.md`, `impression.md`, `bias.md`）
-   - `~/.claude/knowledge/claude-code/` — 6ファイル（`index.md`, `agentic-operating.md`, `model-routing.md`, `orchestration.md`, `automation.md`, `tooling.md`）
+   - `~/.claude/knowledge/claude-code/` — 7ファイル（`index.md`, `agentic-operating.md`, `model-routing.md`, `orchestration.md`, `cross-session.md`, `automation.md`, `tooling.md`）
 8. Apple HIG スキルフォルダに以下のファイルが存在する:
    - `~/.claude/skills/apple-hig-designer/SKILL.md`
    - `~/.claude/skills/apple-hig-designer/REFERENCE.md`
@@ -1503,7 +1505,7 @@ cat ~/.claude/ecc/install-state.json 2>/dev/null && echo "✅ ECC インスト�
 | 知識ベース — E資格（5ファイル） | ✅ |
 | 知識ベース — Python3基礎（5ファイル） | ✅ |
 | 知識ベース — UX心理学（6ファイル） | ✅ |
-| 知識ベース — Claude Code 高度機能・運用（6ファイル） | ✅ |
+| 知識ベース — Claude Code 高度機能・運用（7ファイル） | ✅ |
 | ECC（everything-claude-code） | ✅ インストール済 / ⏭️ スキップ |
 | 前提プログラム（Node.js/Python/uvx） | ✅ 確認済 / ⏭️ スキップ |
 
