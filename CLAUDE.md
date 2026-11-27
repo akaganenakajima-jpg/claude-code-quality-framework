@@ -6,8 +6,8 @@ Claude Code 向け ISO 9001:2015 準拠の品質管理フレームワーク配�
 
 ## 設計原則
 1. **貼り付けで導入**: process系（CLAUDE.md・quality・practices・commands・hooks）は setup-prompt.md 内の `<content>` タグにインライン展開し、貼り付けだけで導入できる。knowledge/ と skills/ は容量が大きいため §4 で git clone + cp により導入する
-2. **ECC競合ゼロ**: `~/.claude/CLAUDE.md` + `knowledge/` を使用（ECCの `~/.claude/rules/` と別空間）
-3. **オンデマンド読込**: CLAUDE.md は判定・トリガーのみ（~170行）。実装ルールは `knowledge/practices/` にオンデマンド参照
+2. **ECC との並存**: `~/.claude/CLAUDE.md` + `knowledge/` を使用する。ECC の `~/.claude/rules/` も毎回読み込まれるため、モデル・effort の選定は CLAUDE.md「サブエージェントの使い分け」と `knowledge/claude-code/model-routing.md` を正本とし、その優先を CLAUDE.md に明記している
+3. **オンデマンド読込**: CLAUDE.md は判定・トリガーのみ（~190行）。実装ルールは `knowledge/practices/` にオンデマンド参照
 
 ## ファイル編集ルール
 
@@ -27,7 +27,8 @@ Claude Code 向け ISO 9001:2015 準拠の品質管理フレームワーク配�
 - §4 の clone+cp で配布される。新ドメイン追加時は §4 cp ループ・§0-2 diff ループ・§6 検証にドメイン名を追加する（`<content>` インラインは不要）
 
 ### hooks/ 配下
-- Hook は**ブロックしない**（常に exit 0）。stderr にリマインダーを出力するのみ
+- Hook は**ブロックしない**（常に exit 0）
+- 注意: exit 0 で終わるフックの stderr は Claude に届かない（公式 hooks「Exit code 0」）。Claude に伝えるには JSON の `additionalContext` などで返す。配布中の `hooks/process-gate.py` は stderr に出力しているため、修正は別 PR で行う
 - setup-prompt.md にもインライン追加する
 
 ### commands/ 配下
